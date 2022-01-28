@@ -16,6 +16,6 @@
 @:   @Model.Name = (Guid)(Null.SetNull(dr["@Model.Name"], @Model.Name));
   break;
  default:
-@:   @Model.Name = Convert.To@(Model.DataType.DataTypeToNet())(Null.SetNull(dr["@Model.Name"], @Model.Name));
+@:   @Model.Name = Convert.To@(Model.DataType.DataTypeToCs())(Null.SetNull(dr["@Model.Name"], @Model.Name));
   break;
 }

@@ -45,11 +45,11 @@
     Engine.RenderTemplate("Model_Interfaces.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "_Interfaces.cs", od);
     Engine.RenderTemplate("Model_Empty.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + ".cs", od);
   }
-  Engine.RenderTemplate("TypeScriptIModel.cshtml", "js\\src\\Models\\I" + od.SingularName + ".ts", od);
+  Engine.RenderTemplate("TypeScriptIModel.cshtml", "ts\\Models\\I" + od.SingularName + ".ts", od);
 }
 
 @{
-  Engine.RenderTemplate("TypeScriptIModelIndex.cshtml", "js\\src\\Models\\index.js");
+  Engine.RenderTemplate("TypeScriptIModelIndex.cshtml", "ts\\Models\\index.js");
   Engine.RenderTemplate("RepositoryImpl.cshtml", "Data\\RepositoryImpl.cs");
   Engine.RenderTemplate("AuditableEntity.cshtml", "Data\\AuditableEntity.cs");
   Engine.RenderTemplate("Sprocs.cshtml", "Data\\Sprocs.cs", DnnDb.StoredProcedures);

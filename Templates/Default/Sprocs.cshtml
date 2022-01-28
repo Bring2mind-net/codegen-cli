@@ -39,8 +39,10 @@ namespace @(Settings.RootNameSpace).Data
     {
 @:                context.Execute(System.Data.CommandType.StoredProcedure,
     }
-@:                    "@sp.Sproc.Name",
-@:                    @sp.Sproc.ParameterList(false, false, true, "", ", "));
+  var pl = sp.Sproc.ParameterList(false, false, true, "", ", ");
+  var comma = string.IsNullOrEmpty(pl) ? "" : ",";
+@:                    "@sp.Sproc.Name"@comma
+@:                    @pl);
 @:            }
 @:        }
 @:

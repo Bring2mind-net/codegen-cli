@@ -257,27 +257,17 @@ namespace Bring2mind.CodeGen.Cli.Common
             return "bool";
           }
 
-        case SqlDataType.Char:
-        case SqlDataType.VarChar:
-        case SqlDataType.VarCharMax:
-          {
-            return "string";
-          }
-
         case SqlDataType.Date:
         case SqlDataType.DateTime:
+        case SqlDataType.Time:
         case SqlDataType.SmallDateTime:
           {
             return "DateTime";
           }
 
-        case SqlDataType.Time:
-          {
-            return "TimeSpan";
-          }
-
         case SqlDataType.Decimal:
         case SqlDataType.Money:
+        case SqlDataType.Numeric:
         case SqlDataType.SmallMoney:
           {
             return "decimal";
@@ -288,34 +278,16 @@ namespace Bring2mind.CodeGen.Cli.Common
             return "int";
           }
 
-        case SqlDataType.NChar:
-        case SqlDataType.NText:
-        case SqlDataType.NVarChar:
-        case SqlDataType.NVarCharMax:
-        case SqlDataType.Text:
-          {
-            return "string";
-          }
-
         case SqlDataType.Real:
           {
             return "float";
-          }
-        case SqlDataType.Numeric:
-          {
-            return "decimal";
           }
         case SqlDataType.Float:
           {
             return "double";
           }
 
-        case SqlDataType.Timestamp:
-          {
-            return "object";
-          }
         case SqlDataType.TinyInt:
-        case SqlDataType.Binary:
           {
             return "byte";
           }
@@ -330,110 +302,15 @@ namespace Bring2mind.CodeGen.Cli.Common
             return "Guid";
           }
 
-        case SqlDataType.UserDefinedDataType:
-        case SqlDataType.UserDefinedType:
-        case SqlDataType.Variant:
+        case SqlDataType.Binary:
+        case SqlDataType.VarBinary:
         case SqlDataType.Image:
+        case SqlDataType.Timestamp:
           {
             return "object";
           }
       }
       return "string";
-    }
-
-    public static string DataTypeToNet(this DataType d)
-    {
-      switch (d.SqlDataType)
-      {
-        case SqlDataType.BigInt:
-          {
-            return "Int64";
-          }
-
-        case SqlDataType.Bit:
-          {
-            return "Boolean";
-          }
-
-        case SqlDataType.Char:
-        case SqlDataType.VarChar:
-        case SqlDataType.VarCharMax:
-          {
-            return "String";
-          }
-
-        case SqlDataType.Date:
-        case SqlDataType.DateTime:
-        case SqlDataType.SmallDateTime:
-          {
-            return "DateTime";
-          }
-
-        case SqlDataType.Time:
-          {
-            return "TimeSpan";
-          }
-
-        case SqlDataType.Decimal:
-        case SqlDataType.Money:
-        case SqlDataType.SmallMoney:
-          {
-            return "Decimal";
-          }
-
-        case SqlDataType.Int:
-          {
-            return "Int32";
-          }
-
-        case SqlDataType.NChar:
-        case SqlDataType.NText:
-        case SqlDataType.NVarChar:
-        case SqlDataType.NVarCharMax:
-        case SqlDataType.Text:
-          {
-            return "String";
-          }
-
-        case SqlDataType.Real:
-          {
-            return "Single";
-          }
-        case SqlDataType.Numeric:
-        case SqlDataType.Float:
-          {
-            return "Double";
-          }
-
-        case SqlDataType.Timestamp:
-        case SqlDataType.Binary:
-          {
-            return "Byte";
-          }
-
-        case SqlDataType.TinyInt:
-          {
-            return "Byte";
-          }
-        case SqlDataType.SmallInt:
-          {
-            return "Int16";
-          }
-
-        case SqlDataType.UniqueIdentifier:
-          {
-            return "Guid";
-          }
-
-        case SqlDataType.UserDefinedDataType:
-        case SqlDataType.UserDefinedType:
-        case SqlDataType.Variant:
-        case SqlDataType.Image:
-          {
-            return "Object";
-          }
-      }
-      return "String";
     }
 
     public static string DataTypeToJs(this DataType d)

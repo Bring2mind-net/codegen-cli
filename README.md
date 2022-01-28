@@ -3,7 +3,6 @@
 # Building
 
 dotnet pack
-dotnet pack -p:NuspecFile=./Templates/Default.nuspec
 
 # Installing
 
