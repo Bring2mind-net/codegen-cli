@@ -11,11 +11,14 @@ if (string.IsNullOrEmpty(settings.Template))
 }
 else
 {
+  Console.WriteLine("Loading Database Objects");
   var database = Database.Instance;
   database.Load(settings);
+  Console.WriteLine("Loading Template Engine");
   var engine = RazorEngine.Instance;
   engine.LoadEngine(Path.GetDirectoryName(settings.Template));
 
+  Console.WriteLine("Start Generating");
   string res = await RazorEngine.Instance.engine.CompileRenderAsync(settings.Template, "");
   Console.WriteLine(res);
 }

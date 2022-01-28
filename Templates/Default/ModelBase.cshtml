@@ -17,9 +17,9 @@
 using System;
 using System.Runtime.Serialization;
 using DotNetNuke.ComponentModel.DataAnnotations;
-using @(Settings.CoreRootNameSpace).Data;
+using @(Settings.RootNameSpace).Data;
 
-namespace @(Settings.CoreRootNameSpace).Models.@(Model.PluralName)
+namespace @(Settings.RootNameSpace).Models.@(Model.PluralName)
 {
     [TableName("@Model.ModuleQualifier@Model.Name")]
 @if (Model.Table.IsTableWithIdColumn())

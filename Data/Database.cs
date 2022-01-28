@@ -135,6 +135,7 @@ namespace Bring2mind.CodeGen.Cli.Data
           System.Text.RegularExpressions.Match fom = System.Text.RegularExpressions.Regex.Match(t.Name, OtherTablesPattern);
           if (fom.Success)
           {
+            Console.WriteLine($"Reading Table: {t.Name} (not included in output)");
             var sqlo = new ObjectDefinition(t, fom);
             ForeignObjects.Add(sqlo.Name, sqlo);
           }
@@ -143,10 +144,12 @@ namespace Bring2mind.CodeGen.Cli.Data
 
       foreach (var o in Objects.Values)
       {
+        Console.WriteLine($"Processing Foreign Keys for {o.Name}");
         o.ProcessForeignKeys(this);
       }
       foreach (var o in Objects.Values)
       {
+        Console.WriteLine($"Processing Child Objects for {o.Name}");
         o.ProcessChildObjects(this);
       }
 
@@ -155,6 +158,7 @@ namespace Bring2mind.CodeGen.Cli.Data
         System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(v.Name, FullPattern);
         if (m.Success)
         {
+          Console.WriteLine($"Processing View: {v.Name}");
           var sqlo = new ObjectDefinition(v, m);
           if (Objects.ContainsKey(sqlo.Name.ToLower()))
           {
@@ -187,6 +191,7 @@ namespace Bring2mind.CodeGen.Cli.Data
         System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(s.Name, FullPattern);
         if (m.Success)
         {
+          Console.WriteLine($"Processing SPROC: {s.Name}");
           SprocDefinition sp = new SprocDefinition(s, m);
           if (sp.ReturnObject != "")
           {

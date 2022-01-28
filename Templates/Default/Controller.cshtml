@@ -4,10 +4,10 @@
 @using Bring2mind.CodeGen.Cli.Razor
 @{
 }
-using @(Settings.CoreRootNameSpace).Models.@(Model.PluralName);
-using @(Settings.CoreRootNameSpace).Repositories;
+using @(Settings.RootNameSpace).Models.@(Model.PluralName);
+using @(Settings.RootNameSpace).Repositories;
 
-namespace @(Settings.CoreRootNameSpace).Controllers
+namespace @(Settings.RootNameSpace).Controllers
 {
 
  public partial class @(Model.PluralName)Controller

@@ -30,11 +30,6 @@
     public string RootNameSpace { get; set; } = "";
 
     /// <summary>
-    /// For use in the templates
-    /// </summary>
-    public string CoreRootNameSpace { get; set; } = "";
-
-    /// <summary>
     /// Full path to the web.config of the DNN Site you're using for development. Alternatively you
     /// can use the ConnectionString, ObjectQualifier, DatabaseOwner values here.
     /// </summary>

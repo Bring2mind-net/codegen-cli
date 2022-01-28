@@ -10,10 +10,10 @@ using DotNetNuke.Collections;
 using DotNetNuke.Common;
 using DotNetNuke.Data;
 using DotNetNuke.Framework;
-using @(Settings.CoreRootNameSpace).Data;
-using @(Settings.CoreRootNameSpace).Models.@(Model.PluralName);
+using @(Settings.RootNameSpace).Data;
+using @(Settings.RootNameSpace).Models.@(Model.PluralName);
 
-namespace @(Settings.CoreRootNameSpace).Repositories
+namespace @(Settings.RootNameSpace).Repositories
 {
 
 	public partial class @(Model.SingularName)Repository : ServiceLocator<I@(Model.SingularName)Repository, @(Model.SingularName)Repository>, I@(Model.SingularName)Repository
