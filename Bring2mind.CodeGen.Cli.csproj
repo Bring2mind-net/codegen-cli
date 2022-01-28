@@ -6,13 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>dnn-codegen</ToolCommandName>
+    <ToolCommandName>codegen</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <Authors>Peter Donker</Authors>
     <Company>Bring2mind</Company>
-    <Description>Type dnn-codegen to generate DNN DAL2 code for your project based on your SQL Data Model</Description>
+    <Description>Type codegen to generate DNN DAL2 code for your project based on your SQL Data Model</Description>
     <Copyright>Bring2mind</Copyright>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <VersionPrefix>$(AssemblyVersion)</VersionPrefix>
     <PreserveCompilationContext>true</PreserveCompilationContext>
