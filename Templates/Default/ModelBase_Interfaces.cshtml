@@ -1,0 +1,81 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@{
+ string baseQualifier = "Base";
+ if (Model.TableOnly)
+ {
+  baseQualifier = "";
+ }
+}
+using System;
+using System.Data;
+
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.ComponentModel.DataAnnotations;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Tokens;
+
+namespace @(Settings.CoreRootNameSpace).Models.@(Model.PluralName)
+{
+    public partial class @(Model.SingularName)@baseQualifier : IHydratable, IPropertyAccess
+    {
+
+        #region IHydratable
+
+        public virtual void Fill(IDataReader dr)
+        {
+@if (Model.HasAuditFields)
+{
+@:            FillAuditFields(dr);
+}
+@foreach (Column c in Model.TableColumns)
+{
+@:@Raw(Engine.RunCompile("IHydratableField.cshtml", c).TrimEnd('\r', '\n'))
+}
+        }
+
+        [IgnoreColumn()]
+        public int KeyID
+        {
+@if (@Model.Table.IsTableWithIdColumn())
+{
+@:            get { return @Model.Table.PrimaryKeyParameters(); }
+@:            set { @Model.Table.PrimaryKeyParameters() = value; }
+}
+else
+{
+@:            get { return Null.NullInteger; }
+@:            set { }
+}
+        }
+        #endregion
+
+        #region IPropertyAccess
+        public virtual string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
+        {
+            switch (strPropertyName.ToLower())
+            {
+@foreach (Column c in Model.TableColumns)
+{
+@:@Raw(Engine.RunCompile("IPropertyAccessField.cshtml", c).TrimEnd('\r', '\n'))
+}
+                default:
+                    propertyNotFound = true;
+                    break;
+            }
+
+            return Null.NullString;
+        }
+
+        [IgnoreColumn()]
+        public CacheLevel Cacheability
+        {
+            get { return CacheLevel.fullyCacheable; }
+        }
+        #endregion
+
+    }
+}

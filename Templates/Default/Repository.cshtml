@@ -1,0 +1,142 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DotNetNuke.Common;
+using DotNetNuke.Data;
+using DotNetNuke.Framework;
+using @(Settings.CoreRootNameSpace).Models.@(Model.PluralName);
+
+namespace @(Settings.CoreRootNameSpace).Repositories
+{
+
+	public partial class @(Model.SingularName)Repository : ServiceLocator<I@(Model.SingularName)Repository, @(Model.SingularName)Repository>, I@(Model.SingularName)Repository
+ {
+        protected override Func<I@(Model.SingularName)Repository> GetFactory()
+        {
+            return () => new @(Model.SingularName)Repository();
+        }
+        public IEnumerable<@(Model.SingularName)> Get@(Model.PluralName)(@(Model.GetScopeDeclaration(true, true, false, false)))
+        {
+            using (var context = DataContext.Instance())
+            {
+                var rep = context.GetRepository<@(Model.SingularName)>();
+                return rep.Get(@(Model.GetScopeDeclaration(true, false, false, false)));
+            }
+        }
+@foreach (KeyValuePair<String, ObjectDefinition> fo in Model.ForeignKeyObjects)
+{
+ if (fo.Key != Model.Scope)
+ {
+@:        public IEnumerable<@(Model.SingularName)> Get@(Model.PluralName)By@(fo.Value.SingularName)(@(Model.Table.Parameter(fo.Key, true, true, "")))
+@:        {
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                return context.ExecuteQuery<@(Model.SingularName)>(System.Data.CommandType.Text,
+@:                    "SELECT * FROM {databaseOwner}{objectQualifier}@Model.Prefix@Model.ModuleQualifier@Model.Name WHERE @(Model.Table.Parameter(fo.Key, false, false, ""))=@@0",
+@:                    @(Model.Table.Parameter(fo.Key, false, true, "")));
+@:            }
+@:        }
+ }
+} 
+@if (Model.HasTable)
+{
+if (!Model.HasNoPrimaryKey)
+{
+@:        public @(Model.SingularName) Get@(Model.SingularName)(@(Model.GetScopeDeclaration(true, true, false, true))@Model.Table.PrimaryKeyParameterList())
+@:        {
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                var rep = context.GetRepository<@(Model.SingularName)>();
+@:                return rep.GetById(@Model.Table.PrimaryKeyParameters().Lowered()@(Model.GetScopeDeclaration(true, false, true, false)));
+@:            }
+@:        }
+}
+@:        public @(Model.TableObjectName) Add@(Model.SingularName)(@(Model.TableObjectName) @(Model.SingularNameLowered)@(Model.HasAuditFields ? ", int userId" : ""))
+@:        {
+@:            Requires.NotNull(@(Model.SingularNameLowered));
+if (Model.Scope != "")
+{
+@:            Requires.PropertyNotNegative(@(Model.SingularNameLowered), "@(Model.GetScopeDeclaration(false, false, false, false))");
+}
+if (Model.HasAuditFields)
+ {
+@:            @(Model.SingularNameLowered).CreatedByUserID = userId;
+@:            @(Model.SingularNameLowered).CreatedOnDate = DateTime.Now;
+@:            @(Model.SingularNameLowered).LastModifiedByUserID = userId;
+@:            @(Model.SingularNameLowered).LastModifiedOnDate = DateTime.Now;
+ }
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                var rep = context.GetRepository<@(Model.TableObjectName)>();
+@:                rep.Insert(@(Model.SingularNameLowered));
+@:            }
+@:            return @(Model.SingularNameLowered);
+@:        }
+@:        public void Delete@(Model.SingularName)(@(Model.TableObjectName) @(Model.SingularNameLowered))
+@:        {
+@:            Requires.NotNull(@(Model.SingularNameLowered));
+@:            Requires.PropertyNotNegative(@(Model.SingularNameLowered), "@(Model.SingularName)Id");
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                var rep = context.GetRepository<@(Model.TableObjectName)>();
+@:                rep.Delete(@(Model.SingularNameLowered));
+@:            }
+@:        }
+if (!Model.HasNoPrimaryKey)
+{
+@:        public void Delete@(Model.SingularName)(@(Model.GetScopeDeclaration(true, true, false, true))@Model.Table.PrimaryKeyParameterList())
+@:        {
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                var rep = context.GetRepository<@(Model.TableObjectName)>();
+@:                rep.Delete("@(Model.GetParameterList(true, true, ObjectDefinition.ParameterListType.SqlWhereClause))", @(Model.GetParameterList(true, true, ObjectDefinition.ParameterListType.Plain)));
+@:            }
+@:        }
+}
+@:        public void Update@(Model.SingularName)(@(Model.TableObjectName) @(Model.SingularNameLowered)@(Model.HasAuditFields ? ", int userId" : ""))
+@:        {
+@:            Requires.NotNull(@(Model.SingularNameLowered));
+@:            Requires.PropertyNotNegative(@(Model.SingularNameLowered), "@(Model.SingularName)Id");
+if (Model.HasAuditFields)
+{
+@:            @(Model.SingularNameLowered).LastModifiedByUserID = userId;
+@:            @(Model.SingularNameLowered).LastModifiedOnDate = DateTime.Now;
+}
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                var rep = context.GetRepository<@(Model.TableObjectName)>();
+@:                rep.Update(@(Model.SingularNameLowered));
+@:            }
+@:        } 
+}
+    }
+    public partial interface I@(Model.SingularName)Repository
+    {
+        IEnumerable<@(Model.SingularName)> Get@(Model.PluralName)(@(Model.GetScopeDeclaration(true, true, false, false)));
+@foreach (KeyValuePair<String, ObjectDefinition> fo in Model.ForeignKeyObjects)
+{
+ if (fo.Key != Model.Scope)
+ {
+@:        IEnumerable<@(Model.SingularName)> Get@(Model.PluralName)By@(fo.Value.SingularName)(@(Model.Table.Parameter(fo.Key, true, true, "")));
+ }
+} 
+@if (Model.HasTable)
+{
+if (!Model.HasNoPrimaryKey)
+{
+@:        @(Model.SingularName) Get@(Model.SingularName)(@(Model.GetScopeDeclaration(true, true, false, true))@Model.Table.PrimaryKeyParameterList());
+}
+@:        @(Model.TableObjectName) Add@(Model.SingularName)(@(Model.TableObjectName) @(Model.SingularNameLowered)@(Model.HasAuditFields ? ", int userId" : ""));
+@:        void Delete@(Model.SingularName)(@(Model.TableObjectName) @(Model.SingularNameLowered));
+if (!Model.HasNoPrimaryKey)
+{
+@:        void Delete@(Model.SingularName)(@(Model.GetScopeDeclaration(true, true, false, true))@Model.Table.PrimaryKeyParameterList());
+}
+@:        void Update@(Model.SingularName)(@(Model.TableObjectName) @(Model.SingularNameLowered)@(Model.HasAuditFields ? ", int userId" : ""));
+}
+    }
+}

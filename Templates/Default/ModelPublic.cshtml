@@ -1,0 +1,52 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+using Newtonsoft.Json;
+using System;
+
+namespace @(Settings.CoreRootNameSpace).Models.@(Model.PluralName)
+{
+    public class @(Model.SingularName)Public : @(Model.SingularName)
+    {
+@foreach (Column c in Model.TableColumns)
+{
+@:        [JsonIgnore]
+@:        public new @c.DataType.DataTypeToCs()@(c.NullSuffix()) @c.Name { get; set; }
+}
+@foreach (Column c in Model.UniqueViewColumns)
+{
+@:        [JsonIgnore]
+@:        public new @c.DataType.DataTypeToCs()@(c.NullSuffix()) @c.Name { get; set; }
+}
+@if (Model.HasAuditFields)
+{
+@:        [JsonIgnore]
+@:        public new int CreatedByUserID { get; set; }
+@:        [JsonIgnore]
+@:        public new DateTime CreatedOnDate { get; set; }
+@:        [JsonIgnore]
+@:        public new int LastModifiedByUserID { get; set; }
+@:        [JsonIgnore]
+@:        public new DateTime LastModifiedOnDate { get; set; }
+@:        [JsonIgnore]
+@:        public new string CreatedByUser { get; set; }
+@:        [JsonIgnore]
+@:        public new string LastModifiedByUser { get; set; }
+}
+
+        public @(Model.SingularName)Public(@(Model.SingularName) input) 
+        {
+@foreach (Column c in Model.TableColumns)
+{
+@:            @c.Name = input.@c.Name;
+}
+@foreach (Column c in Model.UniqueViewColumns)
+{
+@:            @c.Name = input.@c.Name;
+}
+        }
+
+    }
+}

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dnn-codegen</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <Authors>Peter Donker</Authors>
+    <Company>Bring2mind</Company>
+    <Description>Type dnn-codegen to generate DNN DAL2 code for your project based on your SQL Data Model</Description>
+    <Copyright>Bring2mind</Copyright>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <VersionPrefix>$(AssemblyVersion)</VersionPrefix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.1" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="161.46521.71" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Pluralize.NET.Core" Version="1.0.0" />
+    <PackageReference Include="RazorLight.NetCore3" Version="3.0.2" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

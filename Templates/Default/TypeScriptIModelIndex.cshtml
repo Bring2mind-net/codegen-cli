@@ -1,0 +1,11 @@
+@inherits RazorTemplate<string>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@using System.Linq
+
+@foreach (ObjectDefinition od in DnnDb.Objects.Values.OrderBy(od => od.SingularName))
+{
+@:export * from './I@(od.SingularName)';
+}

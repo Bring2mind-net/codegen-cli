@@ -1,0 +1,55 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@{
+}
+@@inherits WebPage<@(Model.SingularName)>
+@@using Connect.DNN.Modules.Conference.Common;
+@@using Connect.Conference.Core.Models.Conferences;
+@@using DotNetNuke.Web.Mvc.Helpers;
+
+<div class="form-horizontal">
+   @foreach (Column c in Model.Table.Columns)
+  {
+    var req = c.Nullable ? "" : ", required = \"true\"";
+    var tp = "";
+    switch (c.DataType.SqlDataType) {
+      case SqlDataType.BigInt:
+      case SqlDataType.Int:
+      case SqlDataType.TinyInt:
+      case SqlDataType.SmallInt:
+      case SqlDataType.Real:
+      case SqlDataType.Numeric:
+      case SqlDataType.Float:
+       tp = ", type = \"number\"";
+       break;
+      case SqlDataType.Date:
+       tp = ", type = \"date\"";
+       break;
+      case SqlDataType.DateTime:
+      case SqlDataType.SmallDateTime:
+       tp = ", type = \"datetime\"";
+       break;
+    }
+    if (c.DataType.SqlDataType == SqlDataType.Bit) {
+ <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="checkbox">
+        <label>
+          @@Html.CheckBoxFor(m => m.@c.Name) @@Dnn.LocalizeString("@c.Name")
+        </label>
+      </div>
+    </div>
+  </div>
+    } else {
+ <div class="form-group">
+   <label for="@c.Name" class="col-sm-2 control-label">@@Dnn.LocalizeString("@c.Name")</label>
+   <div class="col-sm-10">
+     @@Html.TextBoxFor(m => m.@c.Name, new { @@class = "form-control", placeholder = Dnn.LocalizeString("@c.Name")@req@tp })
+   </div>
+ </div>
+    }
+  }
+</div>

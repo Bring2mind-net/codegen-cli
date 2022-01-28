@@ -1,0 +1,89 @@
+@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+export interface I@(Model.SingularName) {
+@foreach (Column c in Model.TableColumns)
+{
+@:  @(c.Name)@(c.NullSuffix()): @(c.DataType.DataTypeToJs());
+}   
+@if (Model.HasAuditFields) 
+{
+@:  CreatedByUserID: number;
+@:  CreatedOnDate: Date;
+@:  LastModifiedByUserID: number;
+@:  LastModifiedOnDate: Date;
+}
+@foreach (Column c in Model.UniqueViewColumns)
+{
+@:  @(c.Name)@(c.NullSuffix()): @(c.DataType.DataTypeToJs());
+}   
+}
+
+export class @(Model.SingularName) implements I@(Model.SingularName) {
+@foreach (Column c in Model.TableColumns)
+{
+@:  @(c.Name)@(c.NullSuffix()): @(c.DataType.DataTypeToJs());
+}
+@if (Model.HasAuditFields) 
+{
+@:  CreatedByUserID: number;
+@:  CreatedOnDate: Date;
+@:  LastModifiedByUserID: number;
+@:  LastModifiedOnDate: Date;
+}
+@foreach (Column c in Model.UniqueViewColumns)
+{
+@:  @(c.Name)@(c.NullSuffix()): @(c.DataType.DataTypeToJs());
+}   
+    constructor() {
+@foreach (Column c in Model.TableColumns)
+{
+  if (!c.Nullable) {
+    switch (c.DataType.DataTypeToJs())
+    {
+      case "number":
+@:  this.@(c.Name) = -1;
+        break;
+      case "string":
+@:  this.@(c.Name) = "";
+        break;
+      case "boolean":
+@:  this.@(c.Name) = false;
+        break;
+      case "Date":
+@:  this.@(c.Name) = new Date();
+        break;
+    }  
+  }
+}   
+@if (Model.HasAuditFields) 
+{
+@:  this.CreatedByUserID = -1;
+@:  this.CreatedOnDate = new Date();
+@:  this.LastModifiedByUserID = -1;
+@:  this.LastModifiedOnDate = new Date();
+}
+@foreach (Column c in Model.UniqueViewColumns)
+{
+  if (!c.Nullable) {
+    switch (c.DataType.DataTypeToJs())
+    {
+      case "number":
+@:  this.@(c.Name) = -1;
+        break;
+      case "string":
+@:  this.@(c.Name) = "";
+        break;
+      case "boolean":
+@:  this.@(c.Name) = false;
+        break;
+      case "Date":
+@:  this.@(c.Name) = new Date();
+        break;
+    }  
+  }
+}   
+   }
+}

@@ -1,0 +1,49 @@
+﻿@inherits RazorTemplate<Dictionary<String, SprocDefinition>>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@{}
+using System;
+using System.Collections.Generic;
+using DotNetNuke.Data;
+
+namespace @(Settings.CoreRootNameSpace).Data
+{
+    public class Sprocs
+    {
+@foreach (SprocDefinition sp in Model.Values)
+{
+    var objName = "object";
+    if (sp.ReturnObject != "")
+    {
+        objName = sp.ReturnObject;
+    }
+@:        // @Raw(System.Text.RegularExpressions.Regex.Replace(sp.Sproc.TextBody, "(\n|\r\n?)", "\r\n        // "));  
+    if (sp.ReturnsData)
+    {
+@:        public static IEnumerable<@objName> @(sp.Name)(@sp.Sproc.ParameterList(true, false, true, "", ", "))
+    }
+    else
+    {
+@:        public static void @(sp.Name)(@sp.Sproc.ParameterList(true, false, true, "", ", "))
+    }
+@:        {
+@:            using (var context = DataContext.Instance())
+@:            {
+    if (sp.ReturnsData)
+    {
+@:                return context.ExecuteQuery<@objName>(System.Data.CommandType.StoredProcedure,
+    }
+    else
+    {
+@:                context.Execute(System.Data.CommandType.StoredProcedure,
+    }
+@:                    "@sp.Sproc.Name",
+@:                    @sp.Sproc.ParameterList(false, false, true, "", ", "));
+@:            }
+@:        }
+@:
+}
+    }
+}

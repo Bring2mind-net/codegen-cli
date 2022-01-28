@@ -1,0 +1,35 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@{
+}
+
+<div class="modal-dialog modal-lg">
+ <div class="modal-content">
+  <div class="modal-header">
+   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+   <h4 class="modal-title" id="cmModalLabel">@@Html.GetLocalizedString("EditUser")</h4>
+  </div>
+  <div class="modal-body">
+   <div class="row">
+    <div class="col-xs-12 form-horizontal">
+   @foreach (Column c in Model.Table.Columns)
+  {
+ <div class="form-group">
+  <label for="Title" class="col-sm-2 control-label">@@Html.GetLocalizedString("@c.Name")</label>
+  <div class="col-sm-10">
+   <input type="text" class="form-control" id="@c.Name" value="@("@Model.")@c.Name">
+  </div>
+ </div>
+  }
+    </div>
+   </div>
+  </div>
+  <div class="modal-footer">
+   <a href="#" id="cmdCancel" class="btn btn-default" data-dismiss="modal">@@Html.GetLocalizedString("cmdCancel")</a>
+   <a href="#" id="cmdSubmit" class="btn btn-primary">@@Html.GetLocalizedString("cmdSubmit")</a>
+  </div>
+ </div>
+</div>

@@ -1,0 +1,23 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@{
+}
+@@inherits WebPage<@(Model.SingularName)>
+@@using Connect.DNN.Modules.Conference.Common;
+@@using Connect.Conference.Core.Models.Conferences;
+@@using DotNetNuke.Web.Mvc.Helpers;
+
+<fieldset>
+   @foreach (Column c in Model.Table.Columns)
+  {
+ <div class="dnnFormItem">
+  <div class="dnnLabel" style="position: relative;">
+   <label>@@Dnn.LocalizeString("@c.Name")</label>
+  </div>
+  @@Html.TextBoxFor(m => m.@c.Name, new { placeholder = Dnn.LocalizeString("@c.Name") })
+ </div>
+  }
+</fieldset>

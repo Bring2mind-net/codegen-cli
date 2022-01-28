@@ -1,0 +1,82 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@{
+}
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
+using @(Settings.CoreRootNameSpace).Repositories;
+
+namespace @(Settings.RootNameSpace).Api
+{
+
+	public partial class @(Model.PluralName)Controller : @(Settings.ModuleName)ApiController
+	{
+
+		[HttpGet()]
+		[DnnModuleAuthorize(AccessLevel = DotNetNuke.Security.SecurityAccessLevel.View)]
+		public HttpResponseMessage MyMethod(int id)
+		{
+			bool res = true;
+			return Request.CreateResponse(HttpStatusCode.OK, res);
+		}
+
+@if (@Model.Table.IsTableWithIdColumn())
+{
+@:	[HttpGet]
+@:	[DnnModuleAuthorize(AccessLevel = DotNetNuke.Security.SecurityAccessLevel.View)]
+@:  public HttpResponseMessage Get (@Model.Table.PrimaryKeyParameterList())
+@:  {
+@:
+@:    @(Model.SingularName)Repository repo = new @(Model.SingularName)Repository();
+@:    return Request.CreateResponse(HttpStatusCode.OK, repo.GetById(@Model.Table.PrimaryKeyParameters().Lowered()));
+@:
+@:  }
+@:
+@:	[HttpPost]
+@:	[DnnModuleAuthorize(AccessLevel = DotNetNuke.Security.SecurityAccessLevel.Edit)]
+@:  public HttpResponseMessage Add (@(Model.SingularName)Base @(Model.SingularName.Lowered()))
+@: {
+ if (Model.HasAuditFields)
+ {
+@:
+@:  @(Model.SingularName.Lowered()).SetAddingUser(userId);
+ }
+@:   @(Model.SingularName)BaseRepository repo = new @(Model.SingularName)BaseRepository();
+@:   repo.Insert(@(Model.SingularName.Lowered()));
+@:   return Request.CreateResponse(HttpStatusCode.OK, @(Model.SingularName.Lowered()));
+@:
+@:  }
+}
+
+	[HttpPost]
+	[DnnModuleAuthorize(AccessLevel = DotNetNuke.Security.SecurityAccessLevel.Edit)]
+  public HttpResponseMessage Update (@(Model.SingularName)Base @(Model.SingularName.Lowered()))
+  {
+
+@if (Model.HasAuditFields)
+ {
+@:   @(Model.SingularName.Lowered()).SetModifyingUser(userId);
+ }
+   @(Model.SingularName)BaseRepository repo = new @(Model.SingularName)BaseRepository();
+   repo.Update(@(Model.SingularName.Lowered()));
+   return Request.CreateResponse(HttpStatusCode.OK, @(Model.SingularName.Lowered()));
+
+  }
+
+	[HttpPost]
+	[DnnModuleAuthorize(AccessLevel = DotNetNuke.Security.SecurityAccessLevel.Edit)]
+  public HttpResponseMessage Delete (@Model.Table.PrimaryKeyParameterList())
+  {
+
+   @(Model.SingularName)BaseRepository repo = new @(Model.SingularName)BaseRepository();
+   repo.Delete(@(Model.SingularName.Lowered()));
+   return Request.CreateResponse(HttpStatusCode.OK, "");
+
+  }
+
+	}
+}

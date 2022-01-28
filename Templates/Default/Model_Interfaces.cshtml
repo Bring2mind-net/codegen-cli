@@ -1,0 +1,60 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@{
+}
+using System;
+using System.Data;
+using System.Xml.Serialization;
+
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Services.Tokens;
+
+namespace @(Settings.CoreRootNameSpace).Models.@(Model.PluralName)
+{
+
+ [Serializable(), XmlRoot("@(Model.SingularName)")]
+ public partial class @(Model.SingularName)
+ {
+
+  #region IHydratable
+  public @(Model.TableAndView ? "override" : "") void Fill(IDataReader dr)
+  {
+@if (Model.TableAndView)
+{
+@:   base.Fill(dr);
+}
+@foreach (Column c in Model.UniqueViewColumns)
+{
+@:@Raw(Engine.RunCompile("IHydratableField.cshtml", c).TrimEnd('\r', '\n'))
+}
+  }
+  #endregion
+
+  #region IPropertyAccess
+  public @(Model.TableAndView ? "override" : "") string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
+  {
+   switch (strPropertyName.ToLower()) {
+@foreach (Column c in Model.UniqueViewColumns)
+{
+@:@Raw(Engine.RunCompile("IPropertyAccessField.cshtml", c).TrimEnd('\r', '\n'))
+}
+    default:
+@if (Model.TableAndView)
+{
+@:       return base.GetProperty(strPropertyName, strFormat, formatProvider, accessingUser, accessLevel, ref propertyNotFound);
+}
+else
+{
+@:       propertyNotFound = true;
+@:       return "";
+@:       break;
+}
+   }
+  }
+  #endregion
+
+ }
+}

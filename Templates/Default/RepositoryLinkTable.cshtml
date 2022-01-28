@@ -1,0 +1,111 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Linq;
+using DotNetNuke.Collections;
+using DotNetNuke.Common;
+using DotNetNuke.Data;
+using DotNetNuke.Framework;
+using @(Settings.CoreRootNameSpace).Data;
+using @(Settings.CoreRootNameSpace).Models.@(Model.PluralName);
+
+namespace @(Settings.CoreRootNameSpace).Repositories
+{
+
+	public partial class @(Model.SingularName)Repository : ServiceLocator<I@(Model.SingularName)Repository, @(Model.SingularName)Repository>, I@(Model.SingularName)Repository
+ {
+        protected override Func<I@(Model.SingularName)Repository> GetFactory()
+        {
+            return () => new @(Model.SingularName)Repository();
+        }
+@foreach (KeyValuePair<String, ObjectDefinition> fo in Model.ForeignKeyObjects)
+{
+ if (fo.Key != Model.Scope)
+ {
+@:        public IEnumerable<@(Model.SingularName)> Get@(Model.PluralName)By@(fo.Value.SingularName)(@(Model.Table.Parameter(fo.Key, true, true, "")))
+@:        {
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                return context.ExecuteQuery<@(Model.SingularName)>(System.Data.CommandType.Text,
+@:                    "SELECT * FROM {databaseOwner}{objectQualifier}@Model.Prefix@Model.ModuleQualifier@Model.Name WHERE @(Model.Table.Parameter(fo.Key, false, false, ""))=@@0",
+@:                    @(Model.Table.Parameter(fo.Key, false, true, "")));
+@:            }
+@:        }
+ }
+} 
+        public void Set@(Model.SingularName)(@Model.Table.ParameterList(Globals.ColumnGroup.PrimaryKey, true, true))
+        {
+            using (var context = DataContext.Instance())
+            {
+                context.Execute(System.Data.CommandType.Text,
+                    "IF NOT EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}@(Model.ModuleQualifier)@(Model.Name) " +
+                    "WHERE @Model.Table.SqlParameterList(Globals.ColumnGroup.PrimaryKey, true, 0, " AND ")) " +
+                    "INSERT INTO {databaseOwner}{objectQualifier}@(Model.ModuleQualifier)@(Model.Name) (@Model.Table.ParameterList(Globals.ColumnGroup.PrimaryKey, false, false, "", ", ")) " +
+                    "SELECT @@0, @@1", @Model.Table.ParameterList(Globals.ColumnGroup.PrimaryKey, false, true));
+            }
+        }
+        public void Set@(Model.PluralName)(@(Model.Table.FirstPrimaryKeyParameter().ColumnParameter()), List<int> @(Model.PluralName.Lowered()))
+        {
+
+            using (var context = DataContext.Instance())
+            {
+                context.Execute(System.Data.CommandType.Text,
+                    "DELETE FROM {databaseOwner}{objectQualifier}@(Model.ModuleQualifier)@(Model.Name) WHERE @(Model.Table.FirstPrimaryKeyParameter().Name)=@@0", @(Model.Table.FirstPrimaryKeyParameter().Name.Lowered()));
+                context.Execute(System.Data.CommandType.Text,
+                    "INSERT INTO {databaseOwner}{objectQualifier}@(Model.ModuleQualifier)@(Model.Name) (@Model.Table.ParameterList(Globals.ColumnGroup.PrimaryKey, false, false, "", ", ")) " +
+                    "SELECT @@0, s.RecordID " +
+                    "FROM {databaseOwner}{objectQualifier}SplitDelimitedIDs(@@1, ',') s", @(Model.Table.FirstPrimaryKeyParameter().Name.Lowered()), string.Join(",", @(Model.PluralName.Lowered())));
+            }
+        }
+        public void Delete@(Model.SingularName)(@(Model.Table.ParameterList(Globals.ColumnGroup.PrimaryKey, true, true)))
+        {
+@foreach (KeyValuePair<String, ObjectDefinition> fo in Model.ForeignKeyObjects)
+{
+ if (fo.Key != Model.Scope)
+ {
+ @:            Requires.NotNull(@(Model.Table.Parameter(fo.Key, false, true, "")));
+ }
+}
+            using (var context = DataContext.Instance())
+            {
+                context.Execute(System.Data.CommandType.Text,
+                    "DELETE FROM {databaseOwner}{objectQualifier}@Model.ModuleQualifier@Model.Name WHERE @(Model.Table.SqlParameterList(Globals.ColumnGroup.PrimaryKey, true, 0, " AND "))",
+                    @(Model.Table.ParameterList(Globals.ColumnGroup.PrimaryKey, false, true, "", ",")));
+            }
+        }
+ @foreach (KeyValuePair<String, ObjectDefinition> fo in Model.ForeignKeyObjects)
+{
+@:        public void Delete@(Model.PluralName)By@(fo.Value.SingularName)(@(Model.Table.Parameter(fo.Key, true, true, "")))
+@:        {
+@:            Requires.NotNull(@(Model.Table.Parameter(fo.Key, false, true, "")));
+@:            using (var context = DataContext.Instance())
+@:            {
+@:                var rep = context.GetRepository<@(Model.TableObjectName)>();
+@:                rep.Delete("WHERE @(Model.Table.Parameter(fo.Key, false, false, ""))=@@0", @(Model.Table.Parameter(fo.Key, false, true, "")));
+@:            }
+@:        }
+} 
+ }
+
+    public partial interface I@(Model.SingularName)Repository
+    {
+@foreach (KeyValuePair<String, ObjectDefinition> fo in Model.ForeignKeyObjects)
+{
+ if (fo.Key != Model.Scope)
+ {
+@:        IEnumerable<@(Model.SingularName)> Get@(Model.PluralName)By@(fo.Value.SingularName)(@(Model.Table.Parameter(fo.Key, true, true, "")));
+ }
+} 
+        void Set@(Model.SingularName)(@Model.Table.PrimaryKeyParameterList());
+        void Set@(Model.PluralName)(@(Model.Table.FirstPrimaryKeyParameter().ColumnParameter()), List<int> @(Model.PluralName.Lowered()));
+        void Delete@(Model.SingularName)(@(Model.Table.ParameterList(Globals.ColumnGroup.PrimaryKey, true, true)));
+@foreach (KeyValuePair<String, ObjectDefinition> fo in Model.ForeignKeyObjects)
+{
+@:        void Delete@(Model.PluralName)By@(fo.Value.SingularName)(@(Model.Table.Parameter(fo.Key, true, true, "")));
+} 
+    }
+}

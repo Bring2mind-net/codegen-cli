@@ -1,0 +1,56 @@
+﻿@inherits RazorTemplate<string>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+
+@foreach (Bring2mind.CodeGen.Cli.Data.ObjectDefinition od in DnnDb.Objects.Values)
+{
+  Engine.RenderTemplate("Controller.cshtml", "Controllers\\" + od.PluralName + "Controller.cs", od);
+  Engine.RenderTemplate("Controller_Services.cshtml", "Api\\" + od.PluralName + "Controller.cs", od);
+  if (od.IsLinkTableWithoutFields)
+  {
+    Engine.RenderTemplate("RepositoryLinkTable.cshtml", "Repositories\\" + od.SingularName + "Repository_Core.cs", od);
+  }
+  else if (od.IsLinkTableWithFields)
+  {
+    Engine.RenderTemplate("RepositoryLinkTablePlus.cshtml", "Repositories\\" + od.SingularName + "Repository_Core.cs", od);
+  }
+  else
+  {
+    Engine.RenderTemplate("Repository.cshtml", "Repositories\\" + od.SingularName + "Repository_Core.cs", od);
+  }
+  Engine.RenderTemplate("Repository_Empty.cshtml", "Repositories\\" + od.SingularName + "Repository.cs", od);
+  if (od.HasTable)
+  {
+    Engine.RenderTemplate("BootstrapPopupEdit.cshtml", "Extra\\Bootstrap\\" + od.SingularName + "Popup.cs", od);
+    Engine.RenderTemplate("MvcEdit.cshtml", "Extra\\Mvc\\" + od.SingularName + "Edit.cshtml", od);
+    Engine.RenderTemplate("MvcBootstrapEdit.cshtml", "Extra\\MvcBootstrap\\" + od.SingularName + "Edit.cshtml", od);
+  }
+  if (od.TableAndView)
+  {
+    Engine.RenderTemplate("Model.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "_Declaration.cs", od);
+    Engine.RenderTemplate("Model_Interfaces.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "_Interfaces.cs", od);
+    Engine.RenderTemplate("ModelBase.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "Base.cs", od);
+    Engine.RenderTemplate("ModelBase_Interfaces.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "Base_Interfaces.cs", od);
+  }
+  else if (od.TableOnly)
+  {
+    Engine.RenderTemplate("ModelBase.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "_Declaration.cs", od);
+    Engine.RenderTemplate("ModelBase_Interfaces.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "_Interfaces.cs", od);
+    Engine.RenderTemplate("Model_Empty.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + ".cs", od);
+  }
+  else if (od.ViewOnly)
+  {
+    Engine.RenderTemplate("Model.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "_Declaration.cs", od);
+    Engine.RenderTemplate("Model_Interfaces.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + "_Interfaces.cs", od);
+    Engine.RenderTemplate("Model_Empty.cshtml", "Models\\" + od.PluralName + "\\" + od.SingularName + ".cs", od);
+  }
+  Engine.RenderTemplate("TypeScriptIModel.cshtml", "js\\src\\Models\\I" + od.SingularName + ".ts", od);
+}
+
+@{
+  Engine.RenderTemplate("TypeScriptIModelIndex.cshtml", "js\\src\\Models\\index.js");
+  Engine.RenderTemplate("RepositoryImpl.cshtml", "Data\\RepositoryImpl.cs");
+  Engine.RenderTemplate("AuditableEntity.cshtml", "Data\\AuditableEntity.cs");
+  Engine.RenderTemplate("Sprocs.cshtml", "Data\\Sprocs.cs", DnnDb.StoredProcedures);
+}

@@ -1,0 +1,35 @@
+﻿@inherits RazorTemplate<Column>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@using Microsoft.SqlServer.Management.Smo
+@switch (Model.DataType.SqlDataType.ToString())
+{
+ case "Int":
+ case "TinyInt":
+ case "SmallInt":
+@:            if (@(((string)ViewBag.ObjectName).Lowered()).@Model.Name > -1)
+@:                @Model.Name = @(((string)ViewBag.ObjectName).Lowered()).@Model.Name;
+  break;
+ case "Real":
+ case "Numeric":
+ case "Float":
+ case "Decimal":
+ case "Money":
+ case "SmallMoney":
+ case "Date":
+ case "DateTime":
+ case "Time":
+ case "SmallDateTime":
+ case "Bit":
+  if (Model.Nullable)
+  {
+@:            if (@(((string)ViewBag.ObjectName).Lowered()).@Model.Name != null)
+  }
+@:            @Model.Name = @(((string)ViewBag.ObjectName).Lowered()).@Model.Name;
+  break;
+ default:
+@:            if (!String.IsNullOrEmpty(@(((string)ViewBag.ObjectName).Lowered()).@Model.Name))
+@:                @Model.Name = @(((string)ViewBag.ObjectName).Lowered()).@Model.Name;
+  break;
+}

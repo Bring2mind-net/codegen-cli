@@ -1,0 +1,61 @@
+﻿@inherits RazorTemplate<ObjectDefinition>
+@using Bring2mind.CodeGen.Cli.Common
+@using Bring2mind.CodeGen.Cli.Data
+@using Bring2mind.CodeGen.Cli.Razor
+@{
+}
+using @(Settings.CoreRootNameSpace).Models.@(Model.PluralName);
+using @(Settings.CoreRootNameSpace).Repositories;
+
+namespace @(Settings.CoreRootNameSpace).Controllers
+{
+
+ public partial class @(Model.PluralName)Controller
+ {
+
+@if (@Model.Table.IsTableWithIdColumn())
+{
+@:  public static @(Model.SingularName) Get@(Model.SingularName)(@Model.Table.PrimaryKeyParameterList())
+@:  {
+@:
+@:    @(Model.SingularName)Repository repo = new @(Model.SingularName)Repository();
+@:    return repo.GetById(@Model.Table.PrimaryKeyParameters().Lowered());
+@:
+@:  }
+@:
+@:  public static int Add@(Model.SingularName)(ref @(Model.SingularName)Base @(Model.SingularName.Lowered())@(Model.HasAuditFields ? ", int userId" : ""))
+@: {
+ if (Model.HasAuditFields)
+ {
+@:
+@:  @(Model.SingularName.Lowered()).SetAddingUser(userId);
+ }
+@:   @(Model.SingularName)BaseRepository repo = new @(Model.SingularName)BaseRepository();
+@:   repo.Insert(@(Model.SingularName.Lowered()));
+@:   return @(Model.SingularName.Lowered()).@Model.Table.PrimaryKeyParameters();
+@:
+@:  }
+}
+
+  public static void Update@(Model.SingularName)(@(Model.SingularName)Base @(Model.SingularName.Lowered())@(Model.HasAuditFields ? ", int userId" : ""))
+  {
+
+@if (Model.HasAuditFields)
+ {
+@:   @(Model.SingularName.Lowered()).SetModifyingUser(userId);
+ }
+   @(Model.SingularName)BaseRepository repo = new @(Model.SingularName)BaseRepository();
+   repo.Update(@(Model.SingularName.Lowered()));
+
+  }
+
+  public static void Delete@(Model.SingularName)(@(Model.SingularName)Base @(Model.SingularName.Lowered()))
+  {
+
+   @(Model.SingularName)BaseRepository repo = new @(Model.SingularName)BaseRepository();
+   repo.Delete(@(Model.SingularName.Lowered()));
+
+  }
+
+ }
+}
