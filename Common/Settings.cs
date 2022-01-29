@@ -58,11 +58,47 @@
     public string ModuleObjectQualifier { get; set; } = "";
 
     /// <summary>
+    /// Whether or not to generate SqlDataProvider scripts (used in DNN extensions).
+    /// </summary>
+    public bool IncludeSqlScripts { get; set; } = true;
+
+    /// <summary>
     /// Any enums to use for database fields. The key is the table name. The values
     /// are pairs of Column and Enum strings. The generator can use this to map int columns
     /// to enums in your code.
     /// </summary>
     public Dictionary<string, List<EnumValue>> EnumValues { get; private set; }
+
+    private string _fullPattern = "";
+    public string FullDbPattern
+    {
+      get
+      {
+        if (string.IsNullOrEmpty(_fullPattern))
+        {
+          if (string.IsNullOrEmpty(ObjectQualifier))
+          {
+            if (string.IsNullOrEmpty(ModuleObjectQualifier))
+            {
+              _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<name>\w+)\]?|(?<=\sJOIN\s+)(?<name>\w+)";
+            }
+            else
+            {
+              _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<prefix>\w*)(?<modqualifier>" + ModuleObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<name>\w+)\]?|(?<=\sJOIN\s+)(?<name>\w+)";
+            }
+          }
+          else if (string.IsNullOrEmpty(ModuleObjectQualifier))
+          {
+            _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<dnnqualifier>" + ObjectQualifier + @")?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?";
+          }
+          else
+          {
+            _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<prefix>\w*)(?<dnnqualifier>" + ObjectQualifier + ")(?<modqualifier>" + ModuleObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<prefix>\w*)(?<dnnqualifier>" + ObjectQualifier + ")(?<modqualifier>" + ModuleObjectQualifier + @")?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?";
+          }
+        }
+        return _fullPattern;
+      }
+    }
 
     public class EnumValue
     {
@@ -76,6 +112,9 @@
       {
         var fileName = ".\\.codegen.json";
         var res = Globals.GetObject(fileName, new Settings(), true);
+        res.DatabaseOwner = res.DatabaseOwner.NonEmptyEnsureEndsWith(".");
+        res.ObjectQualifier = res.ObjectQualifier.NonEmptyEnsureEndsWith("_");
+        res.ModuleObjectQualifier = res.ModuleObjectQualifier.NonEmptyEnsureEndsWith("_");
         return res;
       }
     }

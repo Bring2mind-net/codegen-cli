@@ -27,6 +27,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       ModuleQualifier = settings.ModuleObjectQualifier;
       ObjectQualifier = settings.ObjectQualifier;
       DatabaseOwner = settings.DatabaseOwner;
+      FullPattern = settings.FullDbPattern;
       if (ConnectionString == "")
       {
         if (string.IsNullOrEmpty(settings.SiteConfig) || !File.Exists(settings.SiteConfig))
@@ -82,28 +83,10 @@ namespace Bring2mind.CodeGen.Cli.Data
 
       if (ObjectQualifier == "")
       {
-        if (ModuleQualifier == "")
-        {
-          FullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<name>\w+)\]?|(?<=\sJOIN\s+)(?<name>\w+)";
-        }
-        else
-        {
-          FullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<prefix>\w*)(?<modqualifier>" + ModuleQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<name>\w+)\]?|(?<=\sJOIN\s+)(?<name>\w+)";
-        }
-
         OtherTablesPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<name>\w+)\]?|(?<=\sJOIN\s+)(?<name>\w+)";
       }
       else
       {
-        if (ModuleQualifier == "")
-        {
-          FullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<dnnqualifier>" + ObjectQualifier + @")?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?";
-        }
-        else
-        {
-          FullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<prefix>\w*)(?<modqualifier>" + ModuleQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<prefix>\w*)(?<modqualifier>" + ModuleQualifier + @")(?<name>\w+)\]?";
-        }
-
         OtherTablesPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<dnnqualifier>" + ObjectQualifier + @")?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?";
       }
       Console.WriteLine(string.Format("FullPattern     : {0}", FullPattern));
@@ -116,7 +99,7 @@ namespace Bring2mind.CodeGen.Cli.Data
 
       foreach (Table t in Db.Tables)
       {
-        System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(t.Name, FullPattern);
+        var m = System.Text.RegularExpressions.Regex.Match(t.Name, FullPattern);
         if (m.Success)
         {
           Console.WriteLine("Reading Table: {0}", t.Name);
@@ -132,7 +115,7 @@ namespace Bring2mind.CodeGen.Cli.Data
         }
         else
         {
-          System.Text.RegularExpressions.Match fom = System.Text.RegularExpressions.Regex.Match(t.Name, OtherTablesPattern);
+          var fom = System.Text.RegularExpressions.Regex.Match(t.Name, OtherTablesPattern);
           if (fom.Success)
           {
             Console.WriteLine($"Reading Table: {t.Name} (not included in output)");

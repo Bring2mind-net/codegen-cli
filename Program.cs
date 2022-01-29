@@ -1,4 +1,5 @@
 ﻿using Bring2mind.CodeGen.Cli.Data;
+using Bring2mind.CodeGen.Cli.Data.Scripting;
 using Bring2mind.CodeGen.Cli.Razor;
 
 var arg = args.AsQueryable().FirstOrDefault();
@@ -19,6 +20,8 @@ if (arg != null)
   }
 }
 
+Environment.CurrentDirectory = @"D:\Documents\Visual Studio\Projects\Bring2mind.CodeGen";
+
 var settings = Bring2mind.CodeGen.Cli.Common.Settings.Instance;
 
 if (string.IsNullOrEmpty(settings.Template))
@@ -38,5 +41,9 @@ else
   Console.WriteLine("Start Generating");
   string res = await RazorEngine.Instance.engine.CompileRenderAsync(settings.Template, "");
   Console.WriteLine(res);
+
+  if (settings.IncludeSqlScripts){
+    ScriptGenerator.GenerateScripts(database.Server, database.Db, settings);
+  }
 }
 
