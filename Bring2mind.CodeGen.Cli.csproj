@@ -12,7 +12,7 @@
     <Company>Bring2mind</Company>
     <Description>Type codegen to generate DNN DAL2 code for your project based on your SQL Data Model</Description>
     <Copyright>Bring2mind</Copyright>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <VersionPrefix>$(AssemblyVersion)</VersionPrefix>
     <PreserveCompilationContext>true</PreserveCompilationContext>

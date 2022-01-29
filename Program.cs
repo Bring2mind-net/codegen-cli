@@ -20,8 +20,6 @@ if (arg != null)
   }
 }
 
-Environment.CurrentDirectory = @"D:\Documents\Visual Studio\Projects\Bring2mind.CodeGen";
-
 var settings = Bring2mind.CodeGen.Cli.Common.Settings.Instance;
 
 if (string.IsNullOrEmpty(settings.Template))

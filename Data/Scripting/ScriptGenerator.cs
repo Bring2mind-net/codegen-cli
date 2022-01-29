@@ -15,7 +15,7 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
         dir.Create();
       }
 
-      var tablesScriptFile = Path.Combine(dir.FullName, "01.00.00.SqlDataProvider");
+      var tablesScriptFile = Path.Combine(dir.FullName, "Install.SqlDataProvider");
       var upgradeScriptFile = Path.Combine(dir.FullName, "Upgrade.SqlDataProvider");
       var uninstallScriptFile = Path.Combine(dir.FullName, "Uninstall.SqlDataProvider");
 
