@@ -121,6 +121,14 @@ create powerful templates. E.g.
 
 ...
 
+namespace @(Settings.RootNameSpace).Repositories
+{
+	public partial class @(Model.SingularName)Repository : ServiceLocator<I@(Model.SingularName)Repository, @(Model.SingularName)Repository>, I@(Model.SingularName)Repository
+    {
+        protected override Func<I@(Model.SingularName)Repository> GetFactory()
+        {
+            return () => new @(Model.SingularName)Repository();
+        }
         public IEnumerable<@(Model.SingularName)> Get@(Model.PluralName)(@(Model.GetScopeDeclaration(true, true, false, false)))
         {
             using (var context = DataContext.Instance())
