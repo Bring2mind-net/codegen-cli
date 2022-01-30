@@ -8,9 +8,11 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>codegen</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
+    <Product>DNN CodeGen Tool</Product>
     <Authors>Peter Donker</Authors>
     <Company>Bring2mind</Company>
     <Description>Type codegen to generate DNN DAL2 code for your project based on your SQL Data Model</Description>
+    <PackageTags>code dnn-platform dnn</PackageTags>
     <Copyright>Bring2mind</Copyright>
     <AssemblyVersion>0.2.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
