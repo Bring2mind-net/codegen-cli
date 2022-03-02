@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
+    <PackageType>DotNetCliTool</PackageType>
     <ToolCommandName>codegen</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <Product>DNN CodeGen Tool</Product>
@@ -14,9 +15,13 @@
     <Description>Type codegen to generate DNN DAL2 code for your project based on your SQL Data Model</Description>
     <PackageTags>code dnn-platform dnn</PackageTags>
     <Copyright>Bring2mind</Copyright>
-    <AssemblyVersion>0.2.0.0</AssemblyVersion>
-    <FileVersion>$(AssemblyVersion)</FileVersion>
-    <VersionPrefix>$(AssemblyVersion)</VersionPrefix>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Bring2mind-net/codegen-cli</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>0.2.1.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <VersionPrefix>$(Version)</VersionPrefix>
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
