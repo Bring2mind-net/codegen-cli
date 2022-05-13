@@ -449,5 +449,15 @@ namespace Bring2mind.CodeGen.Cli.Common
       }
       return input;
     }
+
+    public static string NonEmptyEnsureDoesNotEndWith(this string input, string endsWith)
+    {
+      if (string.IsNullOrEmpty(input)) return input;
+      if (input.EndsWith(endsWith))
+      {
+        return input.Substring(0, input.Length - endsWith.Length);
+      }
+      return input;
+    }
   }
 }

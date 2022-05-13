@@ -112,9 +112,9 @@
       {
         var fileName = ".\\.codegen.json";
         var res = Globals.GetObject(fileName, new Settings(), true);
-        res.DatabaseOwner = res.DatabaseOwner.NonEmptyEnsureEndsWith(".");
-        res.ObjectQualifier = res.ObjectQualifier.NonEmptyEnsureEndsWith("_");
-        res.ModuleObjectQualifier = res.ModuleObjectQualifier.NonEmptyEnsureEndsWith("_");
+        res.DatabaseOwner = res.DatabaseOwner.NonEmptyEnsureDoesNotEndWith(".");
+        res.ObjectQualifier = res.ObjectQualifier.NonEmptyEnsureDoesNotEndWith("_");
+        res.ModuleObjectQualifier = res.ModuleObjectQualifier.NonEmptyEnsureDoesNotEndWith("_");
         return res;
       }
     }

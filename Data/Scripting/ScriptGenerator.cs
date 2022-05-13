@@ -38,10 +38,10 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
       using (var uninstallScript = new StreamWriter(uninstallScriptFile, false))
       {
         uninstallScript.ScriptSprocs(settings, ourSprocs, true);
-        uninstallScript.ScriptViewsAndFunctions(settings, sqlServer, db, false);
-        uninstallScript.ScriptTriggers(settings, ourTables, false);
-        uninstallScript.ScriptTableStructure(settings, ourTables, false);
-        uninstallScript.ScriptTables(settings, ourTables, false);
+        uninstallScript.ScriptViewsAndFunctions(settings, sqlServer, db, true);
+        uninstallScript.ScriptTriggers(settings, ourTables, true);
+        uninstallScript.ScriptTableStructure(settings, ourTables, true);
+        uninstallScript.ScriptTables(settings, ourTables, true);
       }
 
       Console.WriteLine("Finished Generating SQL scripts");
