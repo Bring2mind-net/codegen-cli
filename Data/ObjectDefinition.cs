@@ -173,7 +173,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       OriginalName = name;
       Prefix = m.Groups["prefix"].Value;
       ModuleQualifier = m.Groups["modqualifier"].Value;
-      Name = m.Groups["name"].Value;
+      Name = m.Groups["name"].Value.FirstCharToUpper();
       var p = new Pluralization();
       PluralName = p.Pluralize(Name);
       PluralNameLowered = PluralName.Lowered();

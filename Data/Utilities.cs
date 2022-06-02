@@ -51,5 +51,11 @@ namespace Bring2mind.CodeGen.Cli.Data
         }
       }
     }
+
+    internal static string FirstCharToUpper(this string input)
+    {
+      if (string.IsNullOrEmpty(input)) return "";
+      return string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1));
+    }
   }
 }

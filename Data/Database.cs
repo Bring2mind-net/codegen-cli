@@ -190,7 +190,7 @@ namespace Bring2mind.CodeGen.Cli.Data
               }
             }
           }
-          StoredProcedures.Add(sp.Name, sp);
+          StoredProcedures[sp.Name] = sp;
         }
       }
     }

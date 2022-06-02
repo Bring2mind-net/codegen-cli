@@ -84,16 +84,16 @@
             }
             else
             {
-              _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<prefix>\w*)(?<modqualifier>" + ModuleObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<name>\w+)\]?|(?<=\sJOIN\s+)(?<name>\w+)";
+              _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<prefix>\w*)(?<modqualifier>" + ModuleObjectQualifier + @"_)(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<name>\w+)\]?|(?<=\sJOIN\s+)(?<name>\w+)";
             }
           }
           else if (string.IsNullOrEmpty(ModuleObjectQualifier))
           {
-            _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<dnnqualifier>" + ObjectQualifier + @")?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?";
+            _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<dnnqualifier>" + ObjectQualifier + @"_)(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<dnnqualifier>" + ObjectQualifier + @"_)?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @"_)(?<name>\w+)\]?";
           }
           else
           {
-            _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<prefix>\w*)(?<dnnqualifier>" + ObjectQualifier + ")(?<modqualifier>" + ModuleObjectQualifier + @")(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<prefix>\w*)(?<dnnqualifier>" + ObjectQualifier + ")(?<modqualifier>" + ModuleObjectQualifier + @")?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @")(?<name>\w+)\]?";
+            _fullPattern = @"(?<owner>\[?" + DatabaseOwner + @"\]?\.)?\[?(?<prefix>\w*)(?<dnnqualifier>" + ObjectQualifier + "_)(?<modqualifier>" + ModuleObjectQualifier + @"_)(?<name>\w+)\]?|(?<owner>\[?" + DatabaseOwner + @"\]?\.)\[?(?<prefix>\w*)(?<dnnqualifier>" + ObjectQualifier + "_)(?<modqualifier>" + ModuleObjectQualifier + @"_)?(?<name>\w+)\]?|\[?(?<dnnqualifier>" + ObjectQualifier + @"_)(?<name>\w+)\]?";
           }
         }
         return _fullPattern;
