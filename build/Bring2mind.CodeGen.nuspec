@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Bring2mind.CodeGen</id>
-    <version>0.2.3.0	</version>
+    <version>0.2.4.0</version>
     <title>Bring2mind CodeGen Library</title>
     <authors>Bring2mind</authors>
     <owners>Bring2mind</owners>
