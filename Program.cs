@@ -33,14 +33,22 @@ else
   var database = Database.Instance;
   database.Load(settings);
   Console.WriteLine("Loading Template Engine");
-  var engine = RazorEngine.Instance;
-  engine.LoadEngine(Path.GetDirectoryName(settings.Template));
+  var entryTemplate = new FileInfo(settings.Template);
+  if (entryTemplate != null && entryTemplate.Exists)
+  {
+    var engine = RazorEngine.Instance;
+    engine.LoadEngine(entryTemplate.Directory.FullName);
+    Console.WriteLine("Start Generating");
+    string res = await RazorEngine.Instance.engine.CompileRenderAsync(entryTemplate.FullName, "");
+    Console.WriteLine(res);
+  }
+  else
+  {
+    Console.WriteLine($"Can't find template {settings.Template}");
+  }
 
-  Console.WriteLine("Start Generating");
-  string res = await RazorEngine.Instance.engine.CompileRenderAsync(settings.Template, "");
-  Console.WriteLine(res);
-
-  if (settings.IncludeSqlScripts){
+  if (settings.IncludeSqlScripts)
+  {
     ScriptGenerator.GenerateScripts(database.Server, database.Db, settings);
   }
 }
