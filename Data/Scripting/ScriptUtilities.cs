@@ -80,7 +80,7 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
 
         if (m.Groups["modqualifier"].Success)
         {
-          res += settings.ModuleObjectQualifier;
+          res += settings.ModuleObjectQualifier + "_";
         }
 
         res += m.Groups["name"].Value;
