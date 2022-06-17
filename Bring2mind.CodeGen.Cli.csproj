@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="build\" />
     <Folder Include="RazorLight\" />
   </ItemGroup>
 
