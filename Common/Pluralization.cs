@@ -7,6 +7,11 @@ namespace Bring2mind.CodeGen.Cli.Common
   {
     public Dictionary<string, string> Plurals { get; set; } = new Dictionary<string, string>();
 
+    /// <summary>
+    /// Get the plural version of the supplied string
+    /// </summary>
+    /// <param name="value">String to get plural for</param>
+    /// <returns></returns>
     public string Pluralize(string value)
     {
       foreach (KeyValuePair<string, string> kv in Plurals)
@@ -19,6 +24,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return new Pluralizer().Pluralize(value);
     }
 
+    /// <summary>
+    /// Get the singular version of the supplied string
+    /// </summary>
+    /// <param name="value">String to get singular for</param>
+    /// <returns></returns>
     public string Singularize(string value)
     {
       foreach (KeyValuePair<string, string> kv in Plurals)

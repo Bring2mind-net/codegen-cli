@@ -9,11 +9,38 @@ namespace Bring2mind.CodeGen.Cli.Data
     public Server Server { get; set; }
     public Microsoft.SqlServer.Management.Smo.Database Db { get; set; }
 
+    /// <summary>
+    /// Qualifier used for this project in SQL naming
+    /// </summary>
     public string ModuleQualifier { get; set; } = "";
+
+    /// <summary>
+    /// Connection string to development database
+    /// </summary>
     public string ConnectionString { get; set; } = "";
+
+    /// <summary>
+    /// If being used, DNN's objectQualifier for this database
+    /// </summary>
     public string ObjectQualifier { get; set; } = "";
+
+    /// <summary>
+    /// Db owner (normally dbo)
+    /// </summary>
     public string DatabaseOwner { get; set; } = "";
+
+    /// <summary>
+    /// Full regex pattern to parse out object names from the SQL object names
+    /// Can be left empty for default parsing mechanism
+    /// Regex pattern will need to include groups "prefix", "modqualifier" and "name"
+    /// </summary>
     public string FullPattern { get; set; } = "";
+
+    /// <summary>
+    /// Regex to parse/detect other relevant tables in the database that might be
+    /// used in foreign keys (think Users, Portals, Modules tables)
+    /// Can be left empty for default parsing mechanism
+    /// </summary>
     public string OtherTablesPattern { get; set; } = "";
 
     public Dictionary<string, ObjectDefinition> Objects { get; set; } = new Dictionary<string, ObjectDefinition>();

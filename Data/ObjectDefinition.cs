@@ -4,13 +4,34 @@ using System.Text.RegularExpressions;
 
 namespace Bring2mind.CodeGen.Cli.Data
 {
+  /// <summary>
+  /// Class containing all aspects of an object in this project
+  /// </summary>
   public class ObjectDefinition
   {
+    /// <summary>
+    /// SQL table associated with this object, can be null if just a view
+    /// </summary>
     public Table Table { get; set; }
+
+    /// <summary>
+    /// List of table's columns. Excludes audit columns CreatedByUserID, CreatedOnDate, LastModifiedByUserID and LastModifiedOnDate.
+    /// </summary>
     public List<Column> TableColumns { get; set; } = new List<Column>();
 
+    /// <summary>
+    /// SQL View associated with this object, can be null if only a table
+    /// </summary>
     public View View { get; set; }
+
+    /// <summary>
+    /// List of columns in the view not present in the table
+    /// </summary>
     public List<Column> UniqueViewColumns { get; set; } = new List<Column>();
+
+    /// <summary>
+    /// Full name of the view
+    /// </summary>
     public string ViewName { get; set; } = "";
 
     // Localization
@@ -19,18 +40,65 @@ namespace Bring2mind.CodeGen.Cli.Data
     public List<string> LocalizationTableColumns { get; set; } = new List<string>();
 
     // Naming properties
+
+    /// <summary>
+    /// Object name
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Full name of the object
+    /// </summary>
     public string OriginalName { get; set; }
+
+    /// <summary>
+    /// Detected prefix if present (e.g. "vw_")
+    /// </summary>
     public string Prefix { get; set; }
+
+    /// <summary>
+    /// The qualifier used for this project without trailing underscore
+    /// </summary>
     public string ModuleQualifier { get; set; }
+
+    /// <summary>
+    /// Name => Singular
+    /// </summary>
     public string SingularName { get; set; }
+
+    /// <summary>
+    /// Singular name with the first letter lowercased
+    /// </summary>
     public string SingularNameLowered { get; set; }
+
+    /// <summary>
+    /// Name => Plural
+    /// </summary>
     public string PluralName { get; set; }
+
+    /// <summary>
+    /// Plural name with the first letter lowercased
+    /// </summary>
     public string PluralNameLowered { get; set; }
+
+    /// <summary>
+    /// Name => abbreviated using upper case letters in the name
+    /// </summary>
     public string Abbreviation { get; set; }
 
+    /// <summary>
+    /// Detected scope (ModuleId or PortalId)
+    /// </summary>
     public string Scope { get; set; } = "";
+
+    /// <summary>
+    /// Name of the primary key
+    /// </summary>
     public string PrimaryKey { get; set; } = "";
+
+    /// <summary>
+    /// Returns Singular name and then "Base" behind it if a view has been detected
+    /// </summary>
     public string TableObjectName
     {
       get
@@ -45,12 +113,34 @@ namespace Bring2mind.CodeGen.Cli.Data
       }
     }
 
+    /// <summary>
+    /// True if CreatedByUserID, CreatedOnDate, LastModifiedByUserID and LastModifiedOnDate have been detected
+    /// </summary>
     public bool HasAuditFields { get; set; } = false;
+
+    /// <summary>
+    /// True if table has two columns pointing to primary keys of two other tables and extra columns
+    /// </summary>
     public bool IsLinkTableWithFields { get; set; } = false;
+
+    /// <summary>
+    /// True if table just has two columns pointing to primary keys of two other tables
+    /// </summary>
     public bool IsLinkTableWithoutFields { get; set; } = false;
+
+    /// <summary>
+    /// True if table has no primary key
+    /// </summary>
     public bool HasNoPrimaryKey { get; set; } = false;
+
+    /// <summary>
+    /// True if the primary key is a single column which auto increments
+    /// </summary>
     public bool HasIdPrimaryKey { get; set; } = false;
 
+    /// <summary>
+    /// True if a scope value has been found
+    /// </summary>
     public bool HasScope
     {
       get
@@ -58,6 +148,10 @@ namespace Bring2mind.CodeGen.Cli.Data
         return !string.IsNullOrEmpty(Scope);
       }
     }
+
+    /// <summary>
+    /// True if a table underlies this object
+    /// </summary>
     public bool HasTable
     {
       get
@@ -65,6 +159,10 @@ namespace Bring2mind.CodeGen.Cli.Data
         return (Table != null);
       }
     }
+
+    /// <summary>
+    /// True if a view underlies this object
+    /// </summary>
     public bool HasView
     {
       get
@@ -72,6 +170,10 @@ namespace Bring2mind.CodeGen.Cli.Data
         return (View != null);
       }
     }
+
+    /// <summary>
+    /// True if only a table underlies this object
+    /// </summary>
     public bool TableOnly
     {
       get
@@ -79,6 +181,10 @@ namespace Bring2mind.CodeGen.Cli.Data
         return (HasTable & !HasView);
       }
     }
+
+    /// <summary>
+    /// True if only a view underlies this object
+    /// </summary>
     public bool ViewOnly
     {
       get
@@ -86,6 +192,10 @@ namespace Bring2mind.CodeGen.Cli.Data
         return (!HasTable & HasView);
       }
     }
+
+    /// <summary>
+    /// True if both a table and view are used for this object
+    /// </summary>
     public bool TableAndView
     {
       get
@@ -94,7 +204,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       }
     }
 
-    public ObjectDefinition(Table t, Match m)
+    internal ObjectDefinition(Table t, Match m)
     {
       Table = t;
       ParseName(t.Name, m);
@@ -138,7 +248,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       }
     }
 
-    public ObjectDefinition(View v, Match m)
+    internal ObjectDefinition(View v, Match m)
     {
       View = v;
       ParseName(v.Name, m);
@@ -147,7 +257,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       HasNoPrimaryKey = UniqueViewColumns.Where(c => c.InPrimaryKey).Count() == 0;
     }
 
-    public void SetView(View v)
+    internal void SetView(View v)
     {
       View = v;
       ViewName = v.Name;
@@ -168,7 +278,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       }
     }
 
-    public void ParseName(string name, Match m)
+    internal void ParseName(string name, Match m)
     {
       OriginalName = name;
       Prefix = m.Groups["prefix"].Value;
@@ -182,7 +292,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       Abbreviation = GetAbbr(Name);
     }
 
-    public string GetAbbr(string input)
+    private string GetAbbr(string input)
     {
       string res = input.Substring(0, 1);
       foreach (char c in (input.Substring(2)).ToCharArray())
@@ -264,7 +374,7 @@ namespace Bring2mind.CodeGen.Cli.Data
 
             pList.AddRange((from c in Table.Columns.Cast<Column>()
                             where c.InPrimaryKey | !onlyPrimaryKey
-                            select c.ColumnParameter(true, true, true, "")).ToList());
+                            select c.ColumnParameter(true, true, "")).ToList());
             return string.Join(", ", pList);
           }
 
@@ -277,7 +387,7 @@ namespace Bring2mind.CodeGen.Cli.Data
 
             pList.AddRange((from c in Table.Columns.Cast<Column>()
                             where c.InPrimaryKey | !onlyPrimaryKey
-                            select c.ColumnParameter(false, false, false, "")).ToList());
+                            select c.ColumnParameter(false, false, "")).ToList());
             int i = 0;
             List<string> outList = new List<string>();
             foreach (string el in pList)
@@ -297,7 +407,7 @@ namespace Bring2mind.CodeGen.Cli.Data
 
             pList.AddRange((from c in Table.Columns.Cast<Column>()
                             where c.InPrimaryKey | !onlyPrimaryKey
-                            select c.ColumnParameter(false, true, true, "")).ToList());
+                            select c.ColumnParameter(false, true, "")).ToList());
             return string.Join(", ", pList);
           }
       }
@@ -305,7 +415,7 @@ namespace Bring2mind.CodeGen.Cli.Data
 
     public Dictionary<string, ObjectDefinition> ForeignKeyObjects = new Dictionary<string, ObjectDefinition>();
 
-    public void ProcessForeignKeys(Database db)
+    internal void ProcessForeignKeys(Database db)
     {
       if (!HasTable)
       {
@@ -328,7 +438,7 @@ namespace Bring2mind.CodeGen.Cli.Data
 
     public Dictionary<string, ObjectDefinition> ChildObjects = new Dictionary<string, ObjectDefinition>();
 
-    public void ProcessChildObjects(Database db)
+    internal void ProcessChildObjects(Database db)
     {
       if (!HasTable)
       {
@@ -350,7 +460,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       }
     }
 
-    public void SetLocalizationTable(ObjectDefinition table)
+    internal void SetLocalizationTable(ObjectDefinition table)
     {
       Localization = table;
       IsLocalized = true;

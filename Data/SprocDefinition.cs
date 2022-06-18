@@ -4,12 +4,33 @@ using System.Text.RegularExpressions;
 
 namespace Bring2mind.CodeGen.Cli.Data
 {
+  /// <summary>
+  /// Stored procedure used in this project
+  /// </summary>
   public class SprocDefinition
   {
+
+    /// <summary>
+    /// Parsed name of the procedure
+    /// </summary>
     public string Name { get; set; } = "";
+
+    /// <summary>
+    /// Whether the stored procedure returns data or not
+    /// </summary>
     public bool ReturnsData { get; set; } = false;
+
+    /// <summary>
+    /// If "select * from dbo.Foo" is being used this is detected and
+    /// Foo will be returned here
+    /// </summary>
     public string ReturnObject { get; set; } = "";
+
+    /// <summary>
+    /// The actual SQL stored procedure
+    /// </summary>
     public StoredProcedure Sproc { get; set; }
+
     public Dictionary<string, StoredProcedureParameter> Parameters { get; set; } = new Dictionary<string, StoredProcedureParameter>();
 
     public SprocDefinition(StoredProcedure sp, Match m)

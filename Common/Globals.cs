@@ -13,6 +13,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       NonePrimaryKey = 3
     }
 
+    /// <summary>
+    /// Reads the contents of a text file and returns it as a string
+    /// </summary>
+    /// <param name="filePath">Full path to file</param>
+    /// <returns></returns>
     public static string ReadFile(string filePath)
     {
       if (!File.Exists(filePath)) return "";
@@ -22,6 +27,12 @@ namespace Bring2mind.CodeGen.Cli.Common
       }
     }
 
+    /// <summary>
+    /// Creates a file and writes a string to it
+    /// </summary>
+    /// <param name="dir">Base directory</param>
+    /// <param name="relPath">Relative path to file including filename</param>
+    /// <param name="textToWrite">String to write to the file</param>
     public static void WriteFile(string dir, string relPath, string textToWrite)
     {
       string targetFile = Path.Combine(dir, relPath);
@@ -36,6 +47,13 @@ namespace Bring2mind.CodeGen.Cli.Common
       }
     }
 
+    /// <summary>
+    /// Get a string of @n parameters
+    /// </summary>
+    /// <param name="nrParameters">Number to get</param>
+    /// <param name="startIndex">Number to start from (normally 0)</param>
+    /// <param name="separator">Separator between parameters (normally a comma)</param>
+    /// <returns></returns>
     public static string GetSqlParameterNumbers(int nrParameters, int startIndex, string separator)
     {
       List<string> res = new List<string>();
@@ -46,6 +64,12 @@ namespace Bring2mind.CodeGen.Cli.Common
       return string.Join(separator, res);
     }
 
+    /// <summary>
+    /// Gets a comma separated list with the primary key parameters as a list of c# parameters for a function
+    /// (i.e. with the type declaration)
+    /// </summary>
+    /// <param name="table">Table from which to get the primary key</param>
+    /// <returns></returns>
     public static string PrimaryKeyParameterList(this Table table)
     {
       if (table == null)
@@ -56,6 +80,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return string.Join(", ", res);
     }
 
+    /// <summary>
+    /// Gets a comma separated list of primary key parameters to use in calling a function (without type declaration)
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
     public static string PrimaryKeyParameters(this Table table)
     {
       if (table == null)
@@ -66,6 +95,14 @@ namespace Bring2mind.CodeGen.Cli.Common
       return string.Join(", ", res);
     }
 
+    /// <summary>
+    /// Gets a comma separated list of parameters from a group of columns
+    /// </summary>
+    /// <param name="table">Table from which to get the columns</param>
+    /// <param name="group">The kind of group (e.g. PrimaryKey)</param>
+    /// <param name="includeType">Whether to include the type declaration</param>
+    /// <param name="lowered">Whether to lowercase each column name's first letter</param>
+    /// <returns></returns>
     public static string ParameterList(this Table table, ColumnGroup group, bool includeType, bool lowered)
     {
       if (table == null)
@@ -75,6 +112,16 @@ namespace Bring2mind.CodeGen.Cli.Common
       return table.ParameterList(group, includeType, lowered, "", ", ");
     }
 
+    /// <summary>
+    /// Gets a comma separated list of parameters from a group of columns
+    /// </summary>
+    /// <param name="table">Table from which to get the columns</param>
+    /// <param name="group">The kind of group (e.g. PrimaryKey)</param>
+    /// <param name="includeType">Whether to include the type declaration</param>
+    /// <param name="lowered">Whether to lowercase each column name's first letter</param>
+    /// <param name="parameterPrefix">Prefix to put before each parameter</param>
+    /// <param name="separator">Separator to use for the list</param>
+    /// <returns></returns>
     public static string ParameterList(this Table table, ColumnGroup group, bool includeType, bool lowered, string parameterPrefix, string separator)
     {
       if (table == null)
@@ -85,6 +132,15 @@ namespace Bring2mind.CodeGen.Cli.Common
       return string.Join(separator, res);
     }
 
+    /// <summary>
+    /// Gets a single column as a string parameter
+    /// </summary>
+    /// <param name="table">Table from which to get the column</param>
+    /// <param name="parameterName">Name of the column</param>
+    /// <param name="includeType">Whether to include the type declaration</param>
+    /// <param name="lowered">Whether to lowercase the columnname's first letter</param>
+    /// <param name="parameterPrefix">Text to add after the parameter</param>
+    /// <returns></returns>
     public static string Parameter(this Table table, string parameterName, bool includeType, bool lowered, string parameterPrefix)
     {
       if (table == null)
@@ -94,6 +150,15 @@ namespace Bring2mind.CodeGen.Cli.Common
       return table.Columns.Cast<Column>().Where(c => c.Name == parameterName).Select(c => c.ColumnParameter(includeType, lowered, parameterPrefix)).FirstOrDefault();
     }
 
+    /// <summary>
+    /// List of colname=@colname parameters for SQL
+    /// </summary>
+    /// <param name="table">Table from which to get the column</param>
+    /// <param name="group">The kind of group (e.g. PrimaryKey)</param>
+    /// <param name="useOrdinals">Whether to use numbers for the parameters like colname=@0</param>
+    /// <param name="startOrdinal">Starting ordnial number in case of using ordinals</param>
+    /// <param name="separator">Separator between parameters</param>
+    /// <returns></returns>
     public static string SqlParameterList(this Table table, ColumnGroup group, bool useOrdinals, int startOrdinal, string separator)
     {
       if (table == null)
@@ -118,7 +183,15 @@ namespace Bring2mind.CodeGen.Cli.Common
       return string.Join(separator, res);
     }
 
-    public static string ColumnParameter(this Column col, bool includeType, bool lowered, bool camelCase, string parameterPrefix)
+    /// <summary>
+    /// Gets a single column parameter statement
+    /// </summary>
+    /// <param name="col">Column to get the statement for</param>
+    /// <param name="includeType">Whether to include the type declaration</param>
+    /// <param name="lowered">Whether to lowercase the columnname's first letter</param>
+    /// <param name="parameterPrefix">Prexif for parameter like @ symbol</param>
+    /// <returns></returns>
+    public static string ColumnParameter(this Column col, bool includeType, bool lowered, string parameterPrefix)
     {
       if (col == null)
       {
@@ -136,10 +209,6 @@ namespace Bring2mind.CodeGen.Cli.Common
       {
         res += col.Name.Lowered();
       }
-      else if (camelCase)
-      {
-        res += col.Name.Substring(0, 1).ToLower() + col.Name.Substring(1);
-      }
       else
       {
         res += col.Name;
@@ -148,16 +217,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return res;
     }
 
-    public static string ColumnParameter(this Column col, bool includeType, bool lowered, string parameterPrefix)
-    {
-      if (col == null)
-      {
-        return "";
-      }
-
-      return col.ColumnParameter(includeType, lowered, false, parameterPrefix);
-    }
-
+    /// <summary>
+    /// Get a simple C# "type colName" for a column
+    /// </summary>
+    /// <param name="col">Column to get the parameter for</param>
+    /// <returns></returns>
     public static string ColumnParameter(this Column col)
     {
       if (col == null)
@@ -168,6 +232,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return string.Format("{0} {1}", col.DataType.DataTypeToCs(), col.Name.Lowered());
     }
 
+    /// <summary>
+    /// Gets first primary key column from a table
+    /// </summary>
+    /// <param name="table">Table for which to get the column</param>
+    /// <returns></returns>
     public static Column FirstPrimaryKeyParameter(this Table table)
     {
       if (table == null)
@@ -177,6 +246,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return table.Columns.Cast<Column>().Where(c => c.InPrimaryKey).FirstOrDefault();
     }
 
+    /// <summary>
+    /// Gets the suffix for the C# data type in case it's nullable. Mostly "?" but sometimes it's an empty string.
+    /// </summary>
+    /// <param name="col">Column for which to get the suffix</param>
+    /// <returns></returns>
     public static string NullSuffix(this Column col)
     {
       if (col == null)
@@ -209,6 +283,12 @@ namespace Bring2mind.CodeGen.Cli.Common
       return "";
     }
 
+    /// <summary>
+    /// Gets a list of columns for a group
+    /// </summary>
+    /// <param name="table">Table from which to get the columns</param>
+    /// <param name="group">Which group of columns to get</param>
+    /// <returns></returns>
     public static List<Column> GetColumns(this Table table, ColumnGroup group)
     {
       if (table == null)
@@ -243,6 +323,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       }
     }
 
+    /// <summary>
+    /// Gets the C# data type for an SQL data type
+    /// </summary>
+    /// <param name="d">SQL data type</param>
+    /// <returns></returns>
     public static string DataTypeToCs(this DataType d)
     {
       switch (d.SqlDataType)
@@ -313,6 +398,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return "string";
     }
 
+    /// <summary>
+    /// Gets a Typescript data type for an SQL data type
+    /// </summary>
+    /// <param name="d">SQL data type</param>
+    /// <returns></returns>
     public static string DataTypeToJs(this DataType d)
     {
       switch (d.SqlDataType)
@@ -359,6 +449,11 @@ namespace Bring2mind.CodeGen.Cli.Common
     }
 
 
+    /// <summary>
+    /// Determines if the table has a primary key of one column that is auto incrementing
+    /// </summary>
+    /// <param name="table">Table to test</param>
+    /// <returns></returns>
     public static bool IsTableWithIdColumn(this Table table)
     {
       if (table == null)
@@ -377,6 +472,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return false;
     }
 
+    /// <summary>
+    /// Lower cases the first letter of a string
+    /// </summary>
+    /// <param name="input">String to lower case the first letter</param>
+    /// <returns></returns>
     public static string Lowered(this string input)
     {
       if (string.IsNullOrEmpty(input))
@@ -387,6 +487,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return input.Substring(0, 1).ToLower() + input.Substring(1);
     }
 
+    /// <summary>
+    /// Checks the list of known enums to see if the column should be an enum
+    /// </summary>
+    /// <param name="column">Column to check</param>
+    /// <returns></returns>
     public static string EnumName(this Column column)
     {
       try
@@ -409,11 +514,24 @@ namespace Bring2mind.CodeGen.Cli.Common
       }
     }
 
+    /// <summary>
+    /// Get data type of column or enum if it is one
+    /// </summary>
+    /// <param name="column">Column to get type for</param>
+    /// <returns></returns>
     public static string DataTypeToCsOrEnum(this Column column)
     {
       return column.EnumName() ?? column.DataType.DataTypeToCs();
     }
 
+    /// <summary>
+    /// Reads the contents of a json file and converts this to the desired object
+    /// </summary>
+    /// <typeparam name="T">Type to cast file contents to</typeparam>
+    /// <param name="filename">Full path to file</param>
+    /// <param name="defaultObject">Default object in case the file is not present</param>
+    /// <param name="createIfNotPresent">If true then writes the default object out to the file if the file is not present</param>
+    /// <returns></returns>
     public static T GetObject<T>(string filename, T defaultObject, bool createIfNotPresent)
     {
       T res = defaultObject;
@@ -432,6 +550,11 @@ namespace Bring2mind.CodeGen.Cli.Common
       return res;
     }
 
+    /// <summary>
+    /// Save an object as json to a file
+    /// </summary>
+    /// <param name="filename">Full path to file</param>
+    /// <param name="objectToSave">Object to serialize as json and save</param>
     public static void SaveObject(string filename, object objectToSave)
     {
       using (var sw = new StreamWriter(filename))
@@ -440,6 +563,12 @@ namespace Bring2mind.CodeGen.Cli.Common
       }
     }
 
+    /// <summary>
+    /// Check to see if input is not empty then if it ends with string
+    /// </summary>
+    /// <param name="input">String to check</param>
+    /// <param name="endsWith">Character(s) the string should end with</param>
+    /// <returns></returns>
     public static string NonEmptyEnsureEndsWith(this string input, string endsWith)
     {
       if (string.IsNullOrEmpty(input)) return input;
@@ -450,6 +579,12 @@ namespace Bring2mind.CodeGen.Cli.Common
       return input;
     }
 
+    /// <summary>
+    /// Check to see if string is empty and if not ensure the string doesn't end with string
+    /// </summary>
+    /// <param name="input">String to check</param>
+    /// <param name="endsWith">Character(s) to cut off from end</param>
+    /// <returns></returns>
     public static string NonEmptyEnsureDoesNotEndWith(this string input, string endsWith)
     {
       if (string.IsNullOrEmpty(input)) return input;
