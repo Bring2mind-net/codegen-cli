@@ -17,6 +17,9 @@
     {
     }
 
+    /// <summary>
+    /// We are using RazorLightEngine from https://github.com/toddams/RazorLight
+    /// </summary>
     public RazorLightEngine engine { get; set; }
 
     /// <summary>
