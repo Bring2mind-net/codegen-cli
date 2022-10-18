@@ -11,6 +11,12 @@ if (arg != null)
     case "--help":
       Bring2mind.CodeGen.Cli.Common.Help.PrintHelpText();
       return;
+    case "-v":
+    case "--version":
+      var thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+      Console.Write("v");
+      Console.WriteLine(System.Diagnostics.FileVersionInfo.GetVersionInfo(thisAssembly.Location).FileVersion);
+      return;
     default:
       if (Directory.Exists(arg))
       {
