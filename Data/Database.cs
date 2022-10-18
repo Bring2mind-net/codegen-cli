@@ -1,4 +1,5 @@
 ﻿using Microsoft.SqlServer.Management.Smo;
+using System.Linq;
 using System.Xml;
 
 namespace Bring2mind.CodeGen.Cli.Data
@@ -124,7 +125,7 @@ namespace Bring2mind.CodeGen.Cli.Data
       Server = new Server(Connection);
       Db = Server.Databases[Connection.DatabaseName];
 
-      foreach (Table t in Db.Tables)
+      foreach (Table t in Db.Tables.Cast<Table>().Where(o => !o.IsSystemObject))
       {
         var m = System.Text.RegularExpressions.Regex.Match(t.Name, FullPattern);
         if (m.Success)
@@ -163,7 +164,7 @@ namespace Bring2mind.CodeGen.Cli.Data
         o.ProcessChildObjects(this);
       }
 
-      foreach (View v in Db.Views)
+      foreach (View v in Db.Views.Cast<View>().Where(o => !o.IsSystemObject))
       {
         System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(v.Name, FullPattern);
         if (m.Success)
@@ -196,7 +197,7 @@ namespace Bring2mind.CodeGen.Cli.Data
         }
       }
 
-      foreach (StoredProcedure s in Db.StoredProcedures)
+      foreach (StoredProcedure s in Db.StoredProcedures.Cast<StoredProcedure>().Where(o => !o.IsSystemObject))
       {
         System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(s.Name, FullPattern);
         if (m.Success)
