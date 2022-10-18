@@ -261,20 +261,23 @@ namespace Bring2mind.CodeGen.Cli.Data
     {
       View = v;
       ViewName = v.Name;
-      UniqueViewColumns = (from c in v.Columns.Cast<Column>()
-                           where Table.Columns[c.Name] == null
-                           select c).ToList();
-      if ((from c in Table.Columns.Cast<Column>()
-           where c.Name.ToLower() == "moduleid"
-           select c).Count() == 1)
+      if (Table != null)
       {
-        Scope = "ModuleId";
-      }
-      else if ((from c in Table.Columns.Cast<Column>()
-                where c.Name.ToLower() == "portalid"
-                select c).Count() == 1)
-      {
-        Scope = "PortalId";
+        UniqueViewColumns = (from c in v.Columns.Cast<Column>()
+                             where Table.Columns[c.Name] == null
+                             select c).ToList();
+        if ((from c in Table.Columns.Cast<Column>()
+             where c.Name.ToLower() == "moduleid"
+             select c).Count() == 1)
+        {
+          Scope = "ModuleId";
+        }
+        else if ((from c in Table.Columns.Cast<Column>()
+                  where c.Name.ToLower() == "portalid"
+                  select c).Count() == 1)
+        {
+          Scope = "PortalId";
+        }
       }
     }
 
