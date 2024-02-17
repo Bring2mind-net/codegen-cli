@@ -52,6 +52,30 @@ namespace Bring2mind.CodeGen.Cli.Data
       }
     }
 
+    internal static IEnumerable<UserDefinedDataType> GetOurDataTypes(this Microsoft.SqlServer.Management.Smo.Database db, string pattern)
+    {
+      foreach (UserDefinedDataType u in db.UserDefinedDataTypes)
+      {
+        var m = System.Text.RegularExpressions.Regex.Match(u.Name, pattern);
+        if (m.Success)
+        {
+          yield return u;
+        }
+      }
+    }
+
+    internal static IEnumerable<UserDefinedTableType> GetOurTableTypes(this Microsoft.SqlServer.Management.Smo.Database db, string pattern)
+    {
+      foreach (UserDefinedTableType u in db.UserDefinedTableTypes)
+      {
+        var m = System.Text.RegularExpressions.Regex.Match(u.Name, pattern);
+        if (m.Success)
+        {
+          yield return u;
+        }
+      }
+    }
+
     internal static string FirstCharToUpper(this string input)
     {
       if (string.IsNullOrEmpty(input)) return "";

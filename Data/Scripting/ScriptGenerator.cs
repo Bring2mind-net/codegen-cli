@@ -31,6 +31,7 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
 
       using (var upgradeScript = new StreamWriter(upgradeScriptFile, false))
       {
+        upgradeScript.ScriptTypes(settings, db, false);
         upgradeScript.ScriptViewsAndFunctions(settings, sqlServer, db, false);
         upgradeScript.ScriptSprocs(settings, ourSprocs, false);
       }
@@ -40,6 +41,7 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
         uninstallScript.ScriptSprocs(settings, ourSprocs, true);
         uninstallScript.ScriptViewsAndFunctions(settings, sqlServer, db, true);
         uninstallScript.ScriptTriggers(settings, ourTables, true);
+        uninstallScript.ScriptTypes(settings, db, true);
         uninstallScript.ScriptTableStructure(settings, ourTables, true);
         uninstallScript.ScriptTables(settings, ourTables, true);
       }
