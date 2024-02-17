@@ -387,15 +387,91 @@ namespace Bring2mind.CodeGen.Cli.Common
             return "Guid";
           }
 
+        case SqlDataType.Image:
+          {
+            return "byte[]";
+          }
+
         case SqlDataType.Binary:
         case SqlDataType.VarBinary:
-        case SqlDataType.Image:
         case SqlDataType.Timestamp:
           {
             return "object";
           }
       }
       return "string";
+    }
+
+    /// <summary>
+    /// Gets the C# data type for an SQL data type
+    /// </summary>
+    /// <param name="d">SQL data type</param>
+    /// <returns></returns>
+    public static string DataTypeToCsStruct(this DataType d)
+    {
+      switch (d.SqlDataType)
+      {
+        case SqlDataType.BigInt:
+          {
+            return "Int64";
+          }
+
+        case SqlDataType.Bit:
+          {
+            return "Boolean";
+          }
+
+        case SqlDataType.Date:
+        case SqlDataType.DateTime:
+        case SqlDataType.Time:
+        case SqlDataType.SmallDateTime:
+          {
+            return "DateTime";
+          }
+
+        case SqlDataType.Decimal:
+        case SqlDataType.Money:
+        case SqlDataType.Numeric:
+        case SqlDataType.SmallMoney:
+          {
+            return "Decimal";
+          }
+
+        case SqlDataType.Int:
+          {
+            return "Int32";
+          }
+
+        case SqlDataType.Real:
+        case SqlDataType.Float:
+          {
+            return "Double";
+          }
+
+        case SqlDataType.TinyInt:
+          {
+            return "Byte";
+          }
+
+        case SqlDataType.SmallInt:
+          {
+            return "Int16";
+          }
+
+        case SqlDataType.UniqueIdentifier:
+          {
+            return "Guid";
+          }
+
+        case SqlDataType.Binary:
+        case SqlDataType.VarBinary:
+        case SqlDataType.Image:
+        case SqlDataType.Timestamp:
+          {
+            return "Object";
+          }
+      }
+      return "String";
     }
 
     /// <summary>
