@@ -5,12 +5,12 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
 {
   internal static class TableScripter
   {
-    internal static void ScriptTables(this StreamWriter input, Common.Settings settings, IEnumerable<Table> tables, bool drop)
+    internal static void ScriptTables(this StreamWriter input, Common.Settings settings, IEnumerable<Table> tables, bool drop, bool checkExists)
     {
       input.PrintComment("TABLES");
       var opt = ScriptUtilities.GetScriptingoptions();
       opt.ScriptDrops = drop;
-      opt.IncludeIfNotExists = true;
+      opt.IncludeIfNotExists = checkExists;
       foreach (Table t in tables)
       {
         Console.WriteLine(string.Format("Adding {0}", t.Name));
@@ -48,12 +48,12 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
       }
     }
 
-    internal static void ScriptTableStructure(this StreamWriter input, Common.Settings settings, IEnumerable<Table> tables, bool drop)
+    internal static void ScriptTableStructure(this StreamWriter input, Common.Settings settings, IEnumerable<Table> tables, bool drop, bool checkExists)
     {
       input.PrintComment("FOREIGN KEYS");
       var opt = ScriptUtilities.GetScriptingoptions();
       opt.ScriptDrops = drop;
-      opt.IncludeIfNotExists = true;
+      opt.IncludeIfNotExists = checkExists;
       foreach (Table t in tables)
       {
         if (ScriptUtilities.IsPatternMatch(t.Name, settings.ObjectQualifier + settings.ModuleObjectQualifier + ".*"))
@@ -78,7 +78,7 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
       }
     }
 
-    internal static void ScriptTriggers(this StreamWriter input, Common.Settings settings, IEnumerable<Table> tables, bool drop)
+    internal static void ScriptTriggers(this StreamWriter input, Common.Settings settings, IEnumerable<Table> tables, bool drop, bool checkExists)
     {
       input.PrintComment("TRIGGERS");
       var opt = ScriptUtilities.GetScriptingoptions();
@@ -88,17 +88,10 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
         {
           foreach (Trigger tr in t.Triggers)
           {
-            opt.ScriptDrops = true;
-            opt.IncludeIfNotExists = true;
+            opt.ScriptDrops = drop;
+            opt.IncludeIfNotExists = checkExists;
             string triggerScript = ScriptUtilities.GetScript(tr.Script(opt));
             input.PrintScript(triggerScript.ReplaceQualifiers(settings));
-            if (!drop)
-            {
-              opt.ScriptDrops = false;
-              opt.IncludeIfNotExists = false;
-              triggerScript = ScriptUtilities.GetScript(tr.Script(opt));
-              input.PrintScript(triggerScript.ReplaceQualifiers(settings));
-            }
           }
         }
       }

@@ -5,7 +5,7 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
 {
   internal static class ViewsAndFunctionsScripter
   {
-    internal static void ScriptViewsAndFunctions(this StreamWriter input, Common.Settings settings, Server sqlServer, Microsoft.SqlServer.Management.Smo.Database db, bool drop)
+    internal static void ScriptViewsAndFunctions(this StreamWriter input, Common.Settings settings, Server sqlServer, Microsoft.SqlServer.Management.Smo.Database db, bool drop, bool checkExists)
     {
       input.PrintComment("VIEWS AND FUNCTIONS");
       var opt = ScriptUtilities.GetScriptingoptions();
@@ -135,40 +135,30 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
       }
 
       Console.WriteLine("Run order for views");
+      if (drop){
+        DepOrder.Reverse();
+      }
+
       foreach (string key in DepOrder)
       {
         if (db.Views.Contains(key))
         {
           View v = db.Views[key];
           Console.WriteLine(string.Format("Adding {0}", v.Name));
-          opt.ScriptDrops = true;
-          opt.IncludeIfNotExists = true;
+          opt.ScriptDrops = drop;
+          opt.IncludeIfNotExists = checkExists;
           string viewScript = ScriptUtilities.GetScript(v.Script(opt));
           input.PrintScript(viewScript.ReplaceQualifiers(settings));
-          if (!drop)
-          {
-            opt.ScriptDrops = false;
-            opt.IncludeIfNotExists = false;
-            viewScript = ScriptUtilities.GetScript(v.Script(opt));
-            input.PrintScript(viewScript.ReplaceQualifiers(settings));
-          }
         }
 
         if (db.UserDefinedFunctions.Contains(key))
         {
           UserDefinedFunction f = db.UserDefinedFunctions[key];
           Console.WriteLine(string.Format("Adding {0}", f.Name));
-          opt.ScriptDrops = true;
-          opt.IncludeIfNotExists = true;
+          opt.ScriptDrops = drop;
+          opt.IncludeIfNotExists = checkExists;
           string functionScript = ScriptUtilities.GetScript(f.Script(opt));
           input.PrintScript(functionScript.ReplaceQualifiers(settings));
-          if (!drop)
-          {
-            opt.ScriptDrops = false;
-            opt.IncludeIfNotExists = false;
-            functionScript = ScriptUtilities.GetScript(f.Script(opt));
-            input.PrintScript(functionScript.ReplaceQualifiers(settings));
-          }
         }
       }
     }
