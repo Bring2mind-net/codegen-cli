@@ -123,8 +123,10 @@ namespace Bring2mind.CodeGen.Cli.Data
       var conn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
       Connection = new Microsoft.SqlServer.Management.Common.ServerConnection(conn);
       Server = new Server(Connection);
+      Server.SetDefaultInitFields(true);
       Db = Server.Databases[Connection.DatabaseName];
 
+      Console.WriteLine("Checking Tables");
       foreach (Table t in Db.Tables.Cast<Table>().Where(o => !o.IsSystemObject))
       {
         var m = System.Text.RegularExpressions.Regex.Match(t.Name, FullPattern);
@@ -153,17 +155,21 @@ namespace Bring2mind.CodeGen.Cli.Data
         }
       }
 
+      Console.WriteLine("Checking Foreign Keys");
       foreach (var o in Objects.Values)
       {
         Console.WriteLine($"Processing Foreign Keys for {o.Name}");
         o.ProcessForeignKeys(this);
       }
+
+      Console.WriteLine("Checking Child Objects");
       foreach (var o in Objects.Values)
       {
         Console.WriteLine($"Processing Child Objects for {o.Name}");
         o.ProcessChildObjects(this);
       }
 
+      Console.WriteLine("Checking Views");
       foreach (View v in Db.Views.Cast<View>().Where(o => !o.IsSystemObject))
       {
         System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(v.Name, FullPattern);
@@ -183,6 +189,7 @@ namespace Bring2mind.CodeGen.Cli.Data
         }
       }
 
+      Console.WriteLine("Checking Localization");
       foreach (var lo in LocalizationObjects)
       {
         Console.WriteLine("Analyzing: {0}", lo.Value.OriginalName);
@@ -197,6 +204,7 @@ namespace Bring2mind.CodeGen.Cli.Data
         }
       }
 
+      Console.WriteLine("Checking SPROCs");
       foreach (StoredProcedure s in Db.StoredProcedures.Cast<StoredProcedure>().Where(o => !o.IsSystemObject))
       {
         System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(s.Name, FullPattern);
