@@ -22,11 +22,11 @@ namespace @(Settings.RootNameSpace).Data
 @:        // @Raw(System.Text.RegularExpressions.Regex.Replace(sp.Sproc.TextBody, "(\n|\r\n?)", "\r\n        // "));  
     if (sp.ReturnsData)
     {
-@:        public static IEnumerable<@objName> @(sp.Name)(@sp.Sproc.ParameterList(true, false, true, "", ", "))
+@:        public static IEnumerable<@objName> @(sp.Name)(@sp.Sproc.ParameterList(true, true, "", ", "))
     }
     else
     {
-@:        public static void @(sp.Name)(@sp.Sproc.ParameterList(true, false, true, "", ", "))
+@:        public static void @(sp.Name)(@sp.Sproc.ParameterList(true, true, "", ", "))
     }
 @:        {
 @:            using (var context = DataContext.Instance())
@@ -39,7 +39,7 @@ namespace @(Settings.RootNameSpace).Data
     {
 @:                context.Execute(System.Data.CommandType.StoredProcedure,
     }
-  var pl = sp.Sproc.ParameterList(false, false, true, "", ", ");
+  var pl = sp.Sproc.ParameterList(false, true, "", ", ");
   var comma = string.IsNullOrEmpty(pl) ? "" : ",";
 @:                    "@sp.Sproc.Name"@comma
 @:                    @pl);
