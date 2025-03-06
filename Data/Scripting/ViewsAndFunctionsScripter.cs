@@ -1,5 +1,6 @@
 ﻿using Microsoft.SqlServer.Management.Smo;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks.Dataflow;
 
 namespace Bring2mind.CodeGen.Cli.Data.Scripting
 {
@@ -17,35 +18,42 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
       {
         Console.WriteLine("Checking {0}", v.Name);
         var deps = new List<string>();
-        DependencyTree dt = dw.DiscoverDependencies(new SqlSmoObject[] { v }, true);
-        DependencyCollection dc = dw.WalkDependencies(dt);
-        foreach (DependencyCollectionNode d in dc)
+        try
         {
-          var m = Regex.Match(d.Urn.Value, @"/View\[@Name='([^']+)'");
-          if (m.Success)
+          DependencyTree dt = dw.DiscoverDependencies(new SqlSmoObject[] { v }, true);
+          DependencyCollection dc = dw.WalkDependencies(dt);
+          foreach (DependencyCollectionNode d in dc)
           {
-            string ViewName = m.Groups[1].Value;
-            if (ViewName != v.Name & ScriptUtilities.IsPatternMatch(ViewName, settings.ObjectQualifier + "vw_" + settings.ModuleObjectQualifier + ".*"))
+            var m = Regex.Match(d.Urn.Value, @"/View\[@Name='([^']+)'");
+            if (m.Success)
             {
-              if (!deps.Contains(ViewName))
+              string ViewName = m.Groups[1].Value;
+              if (ViewName != v.Name & ScriptUtilities.IsPatternMatch(ViewName, settings.ObjectQualifier + "vw_" + settings.ModuleObjectQualifier + ".*"))
               {
-                deps.Add(ViewName);
+                if (!deps.Contains(ViewName))
+                {
+                  deps.Add(ViewName);
+                }
               }
             }
-          }
 
-          m = Regex.Match(d.Urn.Value, @"/UserDefinedFunction\[@Name='([^']+)'");
-          if (m.Success)
-          {
-            string FunctionName = m.Groups[1].Value;
-            if (ScriptUtilities.IsPatternMatch(FunctionName, settings.ObjectQualifier + settings.ModuleObjectQualifier + ".*"))
+            m = Regex.Match(d.Urn.Value, @"/UserDefinedFunction\[@Name='([^']+)'");
+            if (m.Success)
             {
-              if (!deps.Contains(FunctionName))
+              string FunctionName = m.Groups[1].Value;
+              if (ScriptUtilities.IsPatternMatch(FunctionName, settings.ObjectQualifier + settings.ModuleObjectQualifier + ".*"))
               {
-                deps.Add(FunctionName);
+                if (!deps.Contains(FunctionName))
+                {
+                  deps.Add(FunctionName);
+                }
               }
             }
           }
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Couldn't walk dependencies of {v.Name}: " + ex.Message);
         }
 
         ViewDependencies[v.Name] = deps;
@@ -55,35 +63,42 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
       {
         Console.WriteLine(string.Format("Checking {0}", f.Name));
         var deps = new List<string>();
-        DependencyTree dt = dw.DiscoverDependencies(new SqlSmoObject[] { f }, true);
-        DependencyCollection dc = dw.WalkDependencies(dt);
-        foreach (DependencyCollectionNode d in dc)
+        try
         {
-          var m = Regex.Match(d.Urn.Value, @"/UserDefinedFunction\[@Name='([^']+)'");
-          if (m.Success)
+          DependencyTree dt = dw.DiscoverDependencies(new SqlSmoObject[] { f }, true);
+          DependencyCollection dc = dw.WalkDependencies(dt);
+          foreach (DependencyCollectionNode d in dc)
           {
-            string FunctionName = m.Groups[1].Value;
-            if (FunctionName != f.Name & ScriptUtilities.IsPatternMatch(FunctionName, settings.ObjectQualifier + settings.ModuleObjectQualifier + ".*"))
+            var m = Regex.Match(d.Urn.Value, @"/UserDefinedFunction\[@Name='([^']+)'");
+            if (m.Success)
             {
-              if (!deps.Contains(FunctionName))
+              string FunctionName = m.Groups[1].Value;
+              if (FunctionName != f.Name & ScriptUtilities.IsPatternMatch(FunctionName, settings.ObjectQualifier + settings.ModuleObjectQualifier + ".*"))
               {
-                deps.Add(FunctionName);
+                if (!deps.Contains(FunctionName))
+                {
+                  deps.Add(FunctionName);
+                }
               }
             }
-          }
 
-          m = Regex.Match(d.Urn.Value, @"/View\[@Name='([^']+)'");
-          if (m.Success)
-          {
-            string ViewName = m.Groups[1].Value;
-            if (ScriptUtilities.IsPatternMatch(ViewName, settings.ObjectQualifier + "vw_" + settings.ModuleObjectQualifier + ".*"))
+            m = Regex.Match(d.Urn.Value, @"/View\[@Name='([^']+)'");
+            if (m.Success)
             {
-              if (!deps.Contains(ViewName))
+              string ViewName = m.Groups[1].Value;
+              if (ScriptUtilities.IsPatternMatch(ViewName, settings.ObjectQualifier + "vw_" + settings.ModuleObjectQualifier + ".*"))
               {
-                deps.Add(ViewName);
+                if (!deps.Contains(ViewName))
+                {
+                  deps.Add(ViewName);
+                }
               }
             }
           }
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Couldn't walk dependencies of {f.Name}: " + ex.Message);
         }
 
         ViewDependencies[f.Name] = deps;
@@ -135,15 +150,16 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
       }
 
       Console.WriteLine("Run order for views");
-      if (drop){
+      if (drop)
+      {
         DepOrder.Reverse();
       }
 
       foreach (string key in DepOrder)
       {
-        if (db.Views.Contains(key))
+        if (db.Views.MyContains(key))
         {
-          View v = db.Views[key];
+          View v = db.Views.View(key);
           Console.WriteLine(string.Format("Adding {0}", v.Name));
           opt.ScriptDrops = drop;
           opt.IncludeIfNotExists = checkExists;
@@ -151,9 +167,9 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
           input.PrintScript(viewScript.ReplaceQualifiers(settings));
         }
 
-        if (db.UserDefinedFunctions.Contains(key))
+        if (db.UserDefinedFunctions.MyContains(key))
         {
-          UserDefinedFunction f = db.UserDefinedFunctions[key];
+          UserDefinedFunction f = db.UserDefinedFunctions.UserDefinedFunction(key);
           Console.WriteLine(string.Format("Adding {0}", f.Name));
           opt.ScriptDrops = drop;
           opt.IncludeIfNotExists = checkExists;
