@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Bring2mind.CodeGen</id>
-    <version>0.2.4.0</version>
+    <version>0.3.0.0</version>
     <title>Bring2mind CodeGen Library</title>
     <authors>Bring2mind</authors>
     <owners>Bring2mind</owners>
@@ -15,7 +15,7 @@
     <copyright>Copyright (c) Bring2mind, All Rights Reserved.</copyright>
   </metadata>
   <files>
-    <file src="..\bin\Release\net6.0\Bring2mind.CodeGen.Cli.dll" target="lib\net6.0\" />
-    <file src="..\bin\Release\net6.0\Bring2mind.CodeGen.Cli.pdb" target="lib\net6.0\" />
+    <file src="..\bin\Release\net10.0\Bring2mind.CodeGen.Cli.dll" target="lib\net10.0\" />
+    <file src="..\bin\Release\net10.0\Bring2mind.CodeGen.Cli.pdb" target="lib\net10.0\" />
   </files>
 </package>

@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
-    <PackageType>DotNetCliTool</PackageType>
     <ToolCommandName>codegen</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <Product>DNN CodeGen Tool</Product>
@@ -18,7 +17,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Bring2mind-net/codegen-cli</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>0.2.9.0</Version>
+    <Version>0.3.0.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <VersionPrefix>$(Version)</VersionPrefix>
@@ -28,21 +27,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="6.0.36" />
     <PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.36" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="9.0.2" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="172.61.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.8" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="181.19.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Pluralize.NET.Core" Version="1.0.0" />
-    <PackageReference Include="System.Buffers" Version="4.6.0" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.36" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.3.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" />
   </ItemGroup>
 
   <ItemGroup>

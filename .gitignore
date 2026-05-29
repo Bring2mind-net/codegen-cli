@@ -3,4 +3,5 @@ bin
 obj
 nupkg
 Properties/launchSettings.json
+build/nuget.exe
 
