@@ -6,6 +6,7 @@
 @switch (Model.DataType.SqlDataType.ToString())
 {
  case "DateTime":
+ case "DateTime2":
  case "SmallDateTime":
 @:   @Model.Name = (DateTime)(Null.SetNull(dr["@Model.Name"], @Model.Name));
   break;

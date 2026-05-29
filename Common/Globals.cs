@@ -344,6 +344,7 @@ namespace Bring2mind.CodeGen.Cli.Common
 
         case SqlDataType.Date:
         case SqlDataType.DateTime:
+        case SqlDataType.DateTime2:
         case SqlDataType.Time:
         case SqlDataType.SmallDateTime:
           {
@@ -423,6 +424,7 @@ namespace Bring2mind.CodeGen.Cli.Common
 
         case SqlDataType.Date:
         case SqlDataType.DateTime:
+        case SqlDataType.DateTime2:
         case SqlDataType.Time:
         case SqlDataType.SmallDateTime:
           {
@@ -515,6 +517,7 @@ namespace Bring2mind.CodeGen.Cli.Common
           }
         case SqlDataType.Date:
         case SqlDataType.DateTime:
+        case SqlDataType.DateTime2:
         case SqlDataType.SmallDateTime:
         case SqlDataType.Time:
           {
