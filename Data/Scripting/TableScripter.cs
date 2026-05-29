@@ -63,11 +63,11 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
             string fkScript = ScriptUtilities.GetScript(fk.Script(opt));
             if (string.IsNullOrEmpty(settings.ObjectQualifier))
             {
-              fkScript = fkScript.Replace(fk.Name, string.Format("FK_{0}_{1}", t.Name, fk.ReferencedTable.Replace(settings.ModuleObjectQualifier, "")));
+              fkScript = fkScript.Replace(fk.Name, string.Format("FK_{0}_{1}", t.Name, fk.ReferencedTable.Replace(settings.ModuleObjectQualifier, "").TrimStart('_')));
             }
             else
             {
-              fkScript = fkScript.Replace(fk.Name, string.Format("FK_{0}_{1}", t.Name, fk.ReferencedTable.Replace(settings.ObjectQualifier, "").Replace(settings.ModuleObjectQualifier, "")));
+              fkScript = fkScript.Replace(fk.Name, string.Format("FK_{0}_{1}", t.Name, fk.ReferencedTable.Replace(settings.ObjectQualifier, "").Replace(settings.ModuleObjectQualifier, "").TrimStart('_')));
             }
 
             fkScript = fkScript.ReplaceQualifiers(settings);
