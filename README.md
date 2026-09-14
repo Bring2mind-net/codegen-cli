@@ -216,8 +216,8 @@ If selected the tool will also create install, upgrade and uninstall scripts for
 
 | Script | Included items | Role |
 | ------- | ------- | ------- |
-| Install.SqlDataProvider | Tables, Primary and Foreign Keys and Triggers | Use this script to create an install script in DNN. |
-| Upgrade.SqlDataProvider | Views, Functions and Stored Procedures | If you include this script as an upgrade script in your manifest, DNN will run this for every upgrade. The generated script will first delete and then install all items. |
+| Install.SqlDataProvider | Tables, primary keys, and foreign keys | Use this script to create an install script in DNN. |
+| Upgrade.SqlDataProvider | Indexes, views, functions, stored procedures, triggers, and types | If you include this script as an upgrade script in your manifest, DNN will run this for every upgrade. The generated script will first drop items if they exist, then recreate them. |
 | Uninstall.SqlDataProvider | All | This script will uninstall all items. |
 
 Note this is not "templateable", but it's included in this tool as it is useful to generate alongside your DAL code.

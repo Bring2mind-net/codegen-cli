@@ -34,10 +34,12 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
         upgradeScript.ScriptSprocs(settings, ourSprocs, true, true);
         upgradeScript.ScriptViewsAndFunctions(settings, sqlServer, db, true, true);
         upgradeScript.ScriptTriggers(settings, ourTables, true, true);
+        upgradeScript.ScriptIndexes(settings, ourTables, true, true);
         upgradeScript.ScriptTypes(settings, db, true, true);
 
         // now reinstall
         upgradeScript.ScriptTypes(settings, db, false, false);
+        upgradeScript.ScriptIndexes(settings, ourTables, false, false);
         upgradeScript.ScriptTriggers(settings, ourTables, false, false);
         upgradeScript.ScriptViewsAndFunctions(settings, sqlServer, db, false, false);
         upgradeScript.ScriptSprocs(settings, ourSprocs, false, false);

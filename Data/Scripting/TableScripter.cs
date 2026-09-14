@@ -9,6 +9,8 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
     {
       input.PrintComment("TABLES");
       var opt = ScriptUtilities.GetScriptingoptions();
+      opt.Indexes = false;
+      opt.DriPrimaryKey = true;
       opt.ScriptDrops = drop;
       opt.IncludeIfNotExists = checkExists;
       foreach (Table t in tables)
@@ -93,6 +95,28 @@ namespace Bring2mind.CodeGen.Cli.Data.Scripting
             string triggerScript = ScriptUtilities.GetScript(tr.Script(opt));
             input.PrintScript(triggerScript.ReplaceQualifiers(settings));
           }
+        }
+      }
+    }
+
+    internal static void ScriptIndexes(this StreamWriter input, Common.Settings settings, IEnumerable<Table> tables, bool drop, bool checkExists)
+    {
+      input.PrintComment("INDEXES");
+      var opt = ScriptUtilities.GetScriptingoptions();
+      opt.ScriptDrops = drop;
+      opt.IncludeIfNotExists = checkExists;
+      foreach (Table t in tables)
+      {
+        foreach (Microsoft.SqlServer.Management.Smo.Index i in t.Indexes)
+        {
+          if (i.IndexKeyType == IndexKeyType.DriPrimaryKey)
+          {
+            continue;
+          }
+
+          Console.WriteLine(string.Format("Adding {0}", i.Name));
+          string indexScript = ScriptUtilities.GetScript(i.Script(opt));
+          input.PrintScript(indexScript.ReplaceQualifiers(settings));
         }
       }
     }
